@@ -7,21 +7,21 @@ export const collections: Collection[] = [
     name: 'Lumina',
     slug: 'lumina',
     description: 'Capturing the ethereal glow of moonlight on polished silver.',
-    heroImage: '/artifacts/artifact (1).webp'
+    heroImage: '/artifact-1.webp'
   },
   {
     id: 'c2',
     name: 'Architectural',
     slug: 'architectural',
     description: 'Geometric precision meets organic fluidity.',
-    heroImage: '/artifacts/artifact (15).webp'
+    heroImage: '/artifact-15.webp'
   },
   {
     id: 'c3',
     name: 'Ethereal',
     slug: 'ethereal',
     description: 'Delicate forms that whisper of timeless elegance.',
-    heroImage: '/artifacts/artifact (30).webp'
+    heroImage: '/artifact-30.webp'
   }
 ];
 
@@ -36,8 +36,8 @@ export const products: Product[] = [
     materials: ['925 Sterling Silver', 'Rhodium Plating'],
     careInstructions: 'Clean with a soft polishing cloth. Avoid contact with perfumes and chlorinated water.',
     images: [
-      '/artifacts/artifact (1).webp',
-      '/artifacts/artifact (2).webp'
+      '/artifact-1.webp',
+      '/artifact-2.webp'
     ],
     featured: true
   },
@@ -50,8 +50,8 @@ export const products: Product[] = [
     materials: ['925 Sterling Silver'],
     careInstructions: 'Store in an airtight pouch when not in use to prevent oxidation.',
     images: [
-      '/artifacts/artifact (3).webp',
-      '/artifacts/artifact (4).webp'
+      '/artifact-3.webp',
+      '/artifact-4.webp'
     ],
     featured: true
   },
@@ -64,8 +64,8 @@ export const products: Product[] = [
     materials: ['925 Sterling Silver', 'Anti-tarnish coating'],
     careInstructions: 'Clean with a soft polishing cloth. Avoid contact with harsh chemicals.',
     images: [
-      '/artifacts/artifact (5).webp',
-      '/artifacts/artifact (6).webp'
+      '/artifact-5.webp',
+      '/artifact-6.webp'
     ],
     featured: false
   },
@@ -78,8 +78,8 @@ export const products: Product[] = [
     materials: ['925 Sterling Silver'],
     careInstructions: 'Handle with care. Professional cleaning recommended annually.',
     images: [
-      '/artifacts/artifact (7).webp',
-      '/artifacts/artifact (8).webp'
+      '/artifact-7.webp',
+      '/artifact-8.webp'
     ],
     featured: true
   },
@@ -92,8 +92,8 @@ export const products: Product[] = [
     materials: ['Heavyweight 925 Sterling Silver'],
     careInstructions: 'Avoid impact with hard surfaces. Clean regularly with silver polish.',
     images: [
-      '/artifacts/artifact (9).webp',
-      '/artifacts/artifact (10).webp'
+      '/artifact-9.webp',
+      '/artifact-10.webp'
     ],
     featured: false
   },
@@ -106,8 +106,8 @@ export const products: Product[] = [
     materials: ['925 Sterling Silver', 'Rhodium Plating'],
     careInstructions: 'Clean with a soft polishing cloth. Store separately to prevent scratches.',
     images: [
-      '/artifacts/artifact (11).webp',
-      '/artifacts/artifact (12).webp'
+      '/artifact-11.webp',
+      '/artifact-12.webp'
     ],
     featured: true
   },
@@ -120,8 +120,8 @@ export const products: Product[] = [
     materials: ['925 Sterling Silver', 'Anti-tarnish coating'],
     careInstructions: 'Store hanging to maintain shape. Clean with silver cloth as needed.',
     images: [
-      '/artifacts/artifact (13).webp',
-      '/artifacts/artifact (14).webp'
+      '/artifact-13.webp',
+      '/artifact-14.webp'
     ],
     featured: false
   },
@@ -134,8 +134,8 @@ export const products: Product[] = [
     materials: ['925 Sterling Silver'],
     careInstructions: 'Clean regularly to maintain shine. Avoid wearing during physical activities.',
     images: [
-      '/artifacts/artifact (15).webp',
-      '/artifacts/artifact (16).webp'
+      '/artifact-15.webp',
+      '/artifact-16.webp'
     ],
     featured: true
   },
@@ -150,8 +150,8 @@ export const products: Product[] = [
     materials: ['Heavyweight 925 Sterling Silver'],
     careInstructions: 'Avoid impact with hard surfaces. Professional polishing recommended once a year.',
     images: [
-      '/artifacts/artifact (17).webp',
-      '/artifacts/artifact (18).webp'
+      '/artifact-17.webp',
+      '/artifact-18.webp'
     ],
     featured: true
   },
@@ -164,8 +164,8 @@ export const products: Product[] = [
     materials: ['925 Sterling Silver'],
     careInstructions: 'Store in an airtight pouch. Clean with soft cloth to maintain mirror finish.',
     images: [
-      '/artifacts/artifact (19).webp',
-      '/artifacts/artifact (20).webp'
+      '/artifact-19.webp',
+      '/artifact-20.webp'
     ],
     featured: true
   },
@@ -178,8 +178,8 @@ export const products: Product[] = [
     materials: ['Heavyweight 925 Sterling Silver'],
     careInstructions: 'Avoid impact. Professional cleaning recommended to maintain edges.',
     images: [
-      '/artifacts/artifact (21).webp',
-      '/artifacts/artifact (22).webp'
+      '/artifact-21.webp',
+      '/artifact-22.webp'
     ],
     featured: false
   },
@@ -192,8 +192,8 @@ export const products: Product[] = [
     materials: ['925 Sterling Silver', 'Anti-tarnish coating'],
     careInstructions: 'Clean with soft cloth. Avoid contact with abrasive surfaces.',
     images: [
-      '/artifacts/artifact (23).webp',
-      '/artifacts/artifact (24).webp'
+      '/artifact-23.webp',
+      '/artifact-24.webp'
     ],
     featured: true
   },
@@ -206,8 +206,8 @@ export const products: Product[] = [
     materials: ['925 Sterling Silver'],
     careInstructions: 'Handle with care. Polish regularly to maintain reflective surfaces.',
     images: [
-      '/artifacts/artifact (25).webp',
-      '/artifacts/artifact (26).webp'
+      '/artifact-25.webp',
+      '/artifact-26.webp'
     ],
     featured: false
   },
@@ -220,8 +220,8 @@ export const products: Product[] = [
     materials: ['925 Sterling Silver', 'Rhodium Plating'],
     careInstructions: 'Clean weekly with polishing cloth. Store in separate compartments.',
     images: [
-      '/artifacts/artifact (27).webp',
-      '/artifacts/artifact (28).webp'
+      '/artifact-27.webp',
+      '/artifact-28.webp'
     ],
     featured: true
   },
@@ -234,8 +234,8 @@ export const products: Product[] = [
     materials: ['925 Sterling Silver'],
     careInstructions: 'Store flat or hanging. Clean with silver polish as needed.',
     images: [
-      '/artifacts/artifact (29).webp',
-      '/artifacts/artifact (30).webp'
+      '/artifact-29.webp',
+      '/artifact-30.webp'
     ],
     featured: false
   },
@@ -248,8 +248,8 @@ export const products: Product[] = [
     materials: ['925 Sterling Silver', 'Anti-tarnish coating'],
     careInstructions: 'Avoid harsh chemicals. Clean with soft cloth regularly.',
     images: [
-      '/artifacts/artifact (31).webp',
-      '/artifacts/artifact (32).webp'
+      '/artifact-31.webp',
+      '/artifact-32.webp'
     ],
     featured: true
   },
@@ -262,8 +262,8 @@ export const products: Product[] = [
     materials: ['Heavyweight 925 Sterling Silver'],
     careInstructions: 'Professional maintenance recommended. Avoid wearing during manual work.',
     images: [
-      '/artifacts/artifact (33).webp',
-      '/artifacts/artifact (17).webp'
+      '/artifact-33.webp',
+      '/artifact-17.webp'
     ],
     featured: false
   },
@@ -278,8 +278,8 @@ export const products: Product[] = [
     materials: ['925 Sterling Silver', 'Anti-tarnish coating'],
     careInstructions: 'Handle with care. Best stored hanging to avoid tangles.',
     images: [
-      '/artifacts/artifact (34).webp',
-      '/artifacts/artifact (35).webp'
+      '/artifact-34.webp',
+      '/artifact-35.webp'
     ],
     featured: true
   },
@@ -292,8 +292,8 @@ export const products: Product[] = [
     materials: ['925 Sterling Silver'],
     careInstructions: 'Store carefully to preserve delicate details. Clean gently with soft brush.',
     images: [
-      '/artifacts/artifact (36).webp',
-      '/artifacts/artifact (37).webp'
+      '/artifact-36.webp',
+      '/artifact-37.webp'
     ],
     featured: true
   },
@@ -306,8 +306,8 @@ export const products: Product[] = [
     materials: ['925 Sterling Silver', 'Rhodium Plating'],
     careInstructions: 'Handle with extreme care. Clean with soft polishing cloth only.',
     images: [
-      '/artifacts/artifact (38).webp',
-      '/artifacts/artifact (39).webp'
+      '/artifact-38.webp',
+      '/artifact-39.webp'
     ],
     featured: false
   },
@@ -320,8 +320,8 @@ export const products: Product[] = [
     materials: ['925 Sterling Silver', 'Anti-tarnish coating'],
     careInstructions: 'Store hanging. Clean with gentle silver polish to preserve details.',
     images: [
-      '/artifacts/artifact (40).webp',
-      '/artifacts/artifact (41).webp'
+      '/artifact-40.webp',
+      '/artifact-41.webp'
     ],
     featured: true
   },
@@ -334,8 +334,8 @@ export const products: Product[] = [
     materials: ['925 Sterling Silver'],
     careInstructions: 'Handle carefully. Avoid pulling or stretching. Clean with soft cloth.',
     images: [
-      '/artifacts/artifact (42).webp',
-      '/artifacts/artifact (43).webp'
+      '/artifact-42.webp',
+      '/artifact-43.webp'
     ],
     featured: false
   },
@@ -348,8 +348,8 @@ export const products: Product[] = [
     materials: ['925 Sterling Silver', 'Anti-tarnish coating'],
     careInstructions: 'Store in soft pouch. Clean gently to maintain finish.',
     images: [
-      '/artifacts/artifact (44).webp',
-      '/artifacts/artifact (45).webp'
+      '/artifact-44.webp',
+      '/artifact-45.webp'
     ],
     featured: true
   },
@@ -362,8 +362,8 @@ export const products: Product[] = [
     materials: ['925 Sterling Silver'],
     careInstructions: 'Store separately to prevent tangling. Clean individually with soft cloth.',
     images: [
-      '/artifacts/artifact (46).webp',
-      '/artifacts/artifact (47).webp'
+      '/artifact-46.webp',
+      '/artifact-47.webp'
     ],
     featured: false
   },
@@ -376,8 +376,8 @@ export const products: Product[] = [
     materials: ['925 Sterling Silver', 'Rhodium Plating'],
     careInstructions: 'Store hanging to maintain shape. Clean with specialized silver cloth.',
     images: [
-      '/artifacts/artifact (48).webp',
-      '/artifacts/artifact (49).webp'
+      '/artifact-48.webp',
+      '/artifact-49.webp'
     ],
     featured: true
   }
@@ -386,9 +386,9 @@ export const products: Product[] = [
 export const homepageContent: HomepageContent = {
   heroTitle: 'Amanat Silver',
   heroSubtitle: 'Modern Sculptures for the Human Form',
-  heroImage: '/artifacts/artifact (1).webp',
+  heroImage: '/artifact-1.webp',
   brandStoryShort: 'Founded on the principle that jewellery is a silent dialogue between the artist and the wearer, Amanat Silver creates timeless silver pieces that transcend seasons.',
   craftsmanshipTitle: 'The Art of the Forge',
   craftsmanshipDescription: 'Every piece begins in our atelier as a raw silver ingot. Through heat, pressure, and meticulous hand-tooling, we bring form to the void.',
-  craftsmanshipImage: '/artifacts/artifact (25).webp'
+  craftsmanshipImage: '/artifact-25.webp'
 };

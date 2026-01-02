@@ -61,7 +61,7 @@ export const RingModel3D: React.FC<RingModel3DProps> = ({
 
       const loader = new FBXLoader();
       loader.load(
-        '/ring.FBX',
+        '/ring.fbx',
         (object) => {
           if (!mounted) return;
           

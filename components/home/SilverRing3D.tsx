@@ -67,7 +67,7 @@ export const SilverRing3D: React.FC = () => {
 
       const loader = new FBXLoader();
       loader.load(
-        '/ring.FBX',
+        '/ring.fbx',
         (object) => {
           if (!mounted) return;
           
