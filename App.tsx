@@ -6,12 +6,15 @@ import Collections from './pages/Collections';
 import ProductDetail from './pages/ProductDetail';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import Cart from './pages/Cart';
+import Checkout from './pages/Checkout';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Loader } from './components/common/Loader';
 import { Navbar } from './components/common/Navbar';
 import { Footer } from './components/common/Footer';
 import { useLocomotiveScroll } from './hooks';
+import { CartProvider } from './contexts/CartContext';
 
 // Register GSAP plugins
 if (typeof window !== 'undefined') {
@@ -33,26 +36,30 @@ const App: React.FC = () => {
 
   return (
     <Router>
-      <Loader onComplete={() => setAppIsReady(true)} />
-      <div className={`transition-opacity duration-1000 bg-stone-50 ${appIsReady ? 'opacity-100' : 'opacity-0'}`}>
-        {appIsReady && (
-          <>
-            <Navbar />
-            <LocomotiveScrollWrapper>
-              <main className="min-h-screen">
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/collections" element={<Collections />} />
-                  <Route path="/product/:slug" element={<ProductDetail />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/contact" element={<Contact />} />
-                </Routes>
-              </main>
-              <Footer />
-            </LocomotiveScrollWrapper>
-          </>
-        )}
-      </div>
+      <CartProvider>
+        <Loader onComplete={() => setAppIsReady(true)} />
+        <div className={`transition-opacity duration-1000 bg-stone-50 ${appIsReady ? 'opacity-100' : 'opacity-0'}`}>
+          {appIsReady && (
+            <>
+              <Navbar />
+              <LocomotiveScrollWrapper>
+                <main className="min-h-screen">
+                  <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/collections" element={<Collections />} />
+                    <Route path="/product/:slug" element={<ProductDetail />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/cart" element={<Cart />} />
+                    <Route path="/checkout" element={<Checkout />} />
+                  </Routes>
+                </main>
+                <Footer />
+              </LocomotiveScrollWrapper>
+            </>
+          )}
+        </div>
+      </CartProvider>
     </Router>
   );
 };

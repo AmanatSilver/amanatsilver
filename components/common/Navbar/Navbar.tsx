@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useCart } from '../../../contexts/CartContext';
 
 const navLinks = [
   { name: 'Collections', path: '/collections' },
@@ -11,6 +12,7 @@ export const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { pathname } = useLocation();
+  const { getCartItemsCount } = useCart();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -46,6 +48,20 @@ export const Navbar: React.FC = () => {
                 {link.name}
               </Link>
             ))}
+            <Link 
+              to="/cart"
+              className="relative opacity-40 hover:opacity-100 transition-all"
+              aria-label="Shopping Cart"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+              </svg>
+              {getCartItemsCount() > 0 && (
+                <span className="absolute -top-2 -right-2 bg-stone-900 text-white text-[9px] w-5 h-5 rounded-full flex items-center justify-center font-medium">
+                  {getCartItemsCount()}
+                </span>
+              )}
+            </Link>
           </div>
 
           {/* Mobile Hamburger */}
@@ -76,6 +92,15 @@ export const Navbar: React.FC = () => {
               {link.name}
             </Link>
           ))}
+          <Link 
+            to="/cart"
+            className="text-xs sm:text-sm uppercase tracking-[0.3em] sm:tracking-[0.4em] transition-all text-white opacity-60 hover:opacity-100 flex items-center gap-3"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+            Cart {getCartItemsCount() > 0 && `(${getCartItemsCount()})`}
+          </Link>
         </div>
       </div>
     </>

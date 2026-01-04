@@ -1,8 +1,8 @@
-
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { apiService } from '../services/api';
 import { Product, Collection } from '../types';
+import { useCart } from '../contexts/CartContext';
 
 const ProductDetail: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -10,6 +10,8 @@ const ProductDetail: React.FC = () => {
   const [collection, setCollection] = useState<Collection | null>(null);
   const [loading, setLoading] = useState(true);
   const [isEnquireOpen, setIsEnquireOpen] = useState(false);
+  const { addToCart } = useCart();
+  const [showAddedMessage, setShowAddedMessage] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,6 +38,14 @@ const ProductDetail: React.FC = () => {
     };
     fetchData();
   }, [slug]);
+
+  const handleAddToCart = () => {
+    if (product) {
+      addToCart(product);
+      setShowAddedMessage(true);
+      setTimeout(() => setShowAddedMessage(false), 3000);
+    }
+  };
 
   if (loading) {
     return <div className="h-screen flex items-center justify-center">Loading...</div>;
@@ -87,10 +97,16 @@ const ProductDetail: React.FC = () => {
               </div>
 
               <div className="flex flex-col space-y-4">
+                <button 
+                  onClick={handleAddToCart}
+                  className="bg-stone-900 text-white text-center py-5 text-xs uppercase tracking-[0.3em] hover:bg-stone-800 transition-colors relative"
+                >
+                  {showAddedMessage ? 'Added to Cart!' : 'Add to Cart'}
+                </button>
                 <Link 
                   to="/contact" 
                   state={{ productName: product.name }}
-                  className="bg-stone-900 text-white text-center py-5 text-xs uppercase tracking-[0.3em] hover:bg-stone-800 transition-colors"
+                  className="border border-stone-200 text-stone-900 text-center py-5 text-xs uppercase tracking-[0.3em] hover:bg-stone-100 transition-colors"
                 >
                   Enquire About This Piece
                 </Link>
