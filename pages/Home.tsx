@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { apiService } from '../services/api';
 import { Product, HomepageContent, Collection } from '../types';
+import { reviews } from '../services/mockData';
 import { useGSAPAnimation } from '../hooks';
 import {
   HeroSection,
   PhilosophySection,
   CollectionGrid,
-  CraftsmanshipSection,
-  SignatureItems
+  ReviewSection,
+  SignatureItems,
+  NewArrivals
 } from '../components/home';
 
 const Home: React.FC = () => {
   const [data, setData] = useState<HomepageContent | null>(null);
   const [featured, setFeatured] = useState<Product[]>([]);
   const [collections, setCollections] = useState<Collection[]>([]);
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   
   const heroRef = useGSAPAnimation(loading, data);
@@ -21,14 +24,16 @@ const Home: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [hp, feat, colls] = await Promise.all([
+        const [hp, feat, colls, prods] = await Promise.all([
           apiService.getHomepage(),
           apiService.getFeaturedProducts(),
-          apiService.getCollections()
+          apiService.getCollections(),
+          apiService.getProducts()
         ]);
         setData(hp);
         setFeatured(feat);
         setCollections(colls);
+        setAllProducts(prods);
       } catch (error) {
         console.error("Home data failed:", error);
       } finally {
@@ -55,17 +60,18 @@ const Home: React.FC = () => {
         heroSubtitle={data.heroSubtitle}
       />
       
-      <PhilosophySection brandStoryShort={data.brandStoryShort} />
-      
       <CollectionGrid collections={collections} />
       
-      <CraftsmanshipSection 
-        craftsmanshipImage={data.craftsmanshipImage}
-        craftsmanshipTitle={data.craftsmanshipTitle}
-        craftsmanshipDescription={data.craftsmanshipDescription}
-      />
+      <NewArrivals products={allProducts} />
       
       <SignatureItems featured={featured} />
+      
+      <PhilosophySection brandStoryShort={data.brandStoryShort} />
+      
+      <ReviewSection 
+        reviews={reviews}
+        monthlyImage={data.craftsmanshipImage}
+      />
     </div>
   );
 };

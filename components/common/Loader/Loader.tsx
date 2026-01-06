@@ -76,7 +76,7 @@ export const Loader: React.FC<LoaderProps> = ({ onComplete }) => {
         {/* Brand name with shimmer */}
         <div className={`relative overflow-hidden transition-opacity duration-700 ${isExpanding ? 'opacity-0' : 'opacity-100'}`}>
           <div className="text-[10px] uppercase tracking-[0.6em] text-stone-300 font-light">
-            AMANAT SILVER
+            AMANAT - YOUR SILVER ATELIER
           </div>
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-40" 
                style={{ transform: 'translateX(-100%)' }}></div>

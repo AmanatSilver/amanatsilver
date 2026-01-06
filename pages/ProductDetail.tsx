@@ -8,10 +8,23 @@ const ProductDetail: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const [product, setProduct] = useState<Product | null>(null);
   const [collection, setCollection] = useState<Collection | null>(null);
+  const [similarProducts, setSimilarProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [isEnquireOpen, setIsEnquireOpen] = useState(false);
   const { addToCart } = useCart();
   const [showAddedMessage, setShowAddedMessage] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Auto-rotate images every 6 seconds
+  useEffect(() => {
+    if (!product) return;
+    
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % product.images.length);
+    }, 6000);
+
+    return () => clearInterval(interval);
+  }, [product]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,6 +37,21 @@ const ProductDetail: React.FC = () => {
             (await apiService.getCollections()).find(x => x.id === p.collectionId)?.slug || ''
           );
           if (c) setCollection(c);
+
+          // Find similar products based on matching tags
+          const allProducts = await apiService.getProducts();
+          const similar = allProducts
+            .filter(prod => prod.id !== p.id) // Exclude current product
+            .map(prod => ({
+              product: prod,
+              matchCount: prod.tags.filter(tag => p.tags.includes(tag)).length
+            }))
+            .filter(({ matchCount }) => matchCount > 0) // Only products with at least 1 matching tag
+            .sort((a, b) => b.matchCount - a.matchCount) // Sort by most matches first
+            .slice(0, 3) // Get top 3
+            .map(({ product }) => product);
+          
+          setSimilarProducts(similar);
         }
       } catch (err) {
         console.error(err);
@@ -60,13 +88,33 @@ const ProductDetail: React.FC = () => {
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-20">
           
-          {/* Image Gallery */}
-          <div className="lg:col-span-7 space-y-12" data-scroll data-scroll-speed="0.5">
-            {product.images.map((img, i) => (
-              <div key={i} className="aspect-[4/5] bg-stone-200 overflow-hidden rounded-2xl gsap-fade-up">
-                <img src={img} alt={product.name} className="w-full h-full object-cover object-center" />
+          {/* Image Gallery - Amazon Style */}
+          <div className="lg:col-span-7" data-scroll data-scroll-speed="0.5">
+            <div className="flex gap-4">
+              {/* Thumbnail Column */}
+              <div className="flex flex-col gap-3 w-20">
+                {product.images.map((img, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setCurrentImageIndex(i)}
+                    className={`aspect-square bg-stone-200 overflow-hidden rounded-lg border-2 transition-all ${
+                      currentImageIndex === i ? 'border-stone-400' : 'border-transparent hover:border-stone-300'
+                    }`}
+                  >
+                    <img src={img} alt={`${product.name} ${i + 1}`} className="w-full h-full object-cover" />
+                  </button>
+                ))}
               </div>
-            ))}
+
+              {/* Main Image */}
+              <div className="flex-1 aspect-[4/5] max-w-lg bg-stone-200 overflow-hidden rounded-2xl">
+                <img 
+                  src={product.images[currentImageIndex]} 
+                  alt={product.name} 
+                  className="w-full h-full object-cover object-center transition-opacity duration-500" 
+                />
+              </div>
+            </div>
           </div>
 
           {/* Product Info */}
@@ -103,34 +151,46 @@ const ProductDetail: React.FC = () => {
                 >
                   {showAddedMessage ? 'Added to Cart!' : 'Add to Cart'}
                 </button>
-                <Link 
-                  to="/contact" 
-                  state={{ productName: product.name }}
-                  className="border border-stone-200 text-stone-900 text-center py-5 text-xs uppercase tracking-[0.3em] hover:bg-stone-100 transition-colors"
-                >
-                  Enquire About This Piece
-                </Link>
-                <Link 
-                  to="/contact"
-                  className="border border-stone-200 text-stone-900 text-center py-5 text-xs uppercase tracking-[0.3em] hover:bg-stone-100 transition-colors"
-                >
-                  Visit Our London Atelier
-                </Link>
               </div>
-
-              {collection && (
-                <div className="mt-20 pt-12 border-t border-stone-100">
-                  <span className="text-[10px] uppercase tracking-[0.3em] text-stone-400 block mb-4">From the series</span>
-                  <h3 className="text-2xl font-light serif mb-4">{collection.name}</h3>
-                  <p className="text-sm text-stone-400 font-light italic mb-6 leading-relaxed">
-                    {collection.description}
-                  </p>
-                  <Link to="/collections" className="text-[10px] uppercase tracking-[0.2em] line-reveal">View collection</Link>
-                </div>
-              )}
             </div>
           </div>
         </div>
+
+        {/* Similar Products Section */}
+        {similarProducts.length > 0 && (
+          <div className="container mx-auto px-6 mt-32 pb-20">
+            <div className="border-t border-stone-200 pt-20">
+              <h2 className="text-3xl md:text-4xl font-light serif mb-12 text-center">See Similar</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+                {similarProducts.map((similarProduct) => (
+                  <Link 
+                    key={similarProduct.id} 
+                    to={`/product/${similarProduct.slug}`}
+                    className="group block"
+                  >
+                    <div className="relative aspect-[3/4] bg-stone-200 overflow-hidden mb-6 rounded-2xl">
+                      <img 
+                        src={similarProduct.images[0]} 
+                        alt={similarProduct.name}
+                        className="w-full h-full object-cover object-center luxury-transition group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-stone-900/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    </div>
+                    <h3 className="text-xl font-light serif mb-2">{similarProduct.name}</h3>
+                    <p className="text-stone-400 text-sm font-light mb-3">{similarProduct.description.slice(0, 60)}...</p>
+                    <div className="flex flex-wrap gap-2">
+                      {similarProduct.tags.slice(0, 3).map((tag, i) => (
+                        <span key={i} className="text-[8px] uppercase tracking-wider px-2 py-1 bg-stone-100 text-stone-500 rounded">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

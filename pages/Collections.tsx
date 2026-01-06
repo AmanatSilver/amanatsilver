@@ -17,7 +17,9 @@ const Collections: React.FC = () => {
           apiService.getProducts(),
           apiService.getCollections()
         ]);
-        setProducts(p);
+        // Filter to show only jewelry products (not broches)
+        const jewelryProducts = p.filter(product => product.category === 'jewelry');
+        setProducts(jewelryProducts);
         setCollections(c);
       } catch (err) {
         console.error(err);
@@ -59,9 +61,9 @@ const Collections: React.FC = () => {
     <div className="pt-40 pb-32 bg-stone-50 min-h-screen" data-scroll-section>
       <div className="container mx-auto px-6">
         <header className="mb-24 text-center max-w-2xl mx-auto" data-scroll data-scroll-speed="0.5">
-          <h1 className="text-6xl font-light mb-8 serif gsap-fade-up">The Catalogue</h1>
+          <h1 className="text-6xl font-light mb-8 serif gsap-fade-up">Pure Silver</h1>
           <p className="text-stone-500 font-light leading-relaxed mb-12 gsap-fade-up">
-            A comprehensive collection of our handcrafted silver works. Explore by series or browse the full silhouette library.
+            A comprehensive collection of our handcrafted silver jewelry. Explore by series or browse the full silhouette library.
           </p>
           
           <div className="flex flex-wrap justify-center gap-8 border-y border-stone-200 py-6 gsap-fade-up">
@@ -103,8 +105,15 @@ const Collections: React.FC = () => {
                 <p className="text-[10px] uppercase tracking-[0.3em] text-stone-400 mb-2">
                   {collections.find(c => c.id === product.collectionId)?.name} Collection
                 </p>
-                <h3 className="text-2xl font-light tracking-wide mb-1 serif">{product.name}</h3>
-                <div className="w-12 h-[1px] bg-stone-300 mx-auto mt-6 group-hover:w-24 luxury-transition"></div>
+                <h3 className="text-2xl font-light tracking-wide mb-3 serif">{product.name}</h3>
+                <div className="flex flex-wrap gap-2 justify-center mb-4">
+                  {product.tags.slice(0, 3).map((tag, i) => (
+                    <span key={i} className="text-[8px] uppercase tracking-wider px-2 py-1 bg-stone-100 text-stone-500 rounded">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <div className="w-12 h-[1px] bg-stone-300 mx-auto group-hover:w-24 luxury-transition"></div>
               </div>
             </Link>
           ))}

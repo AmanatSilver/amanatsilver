@@ -56,9 +56,13 @@ export const SilverRing3D: React.FC = () => {
       directionalLight2.position.set(-5, -5, -5);
       scene.add(directionalLight2);
 
-      const rimLight = new THREE.DirectionalLight(0xadd8e6, 1.2);
+      const rimLight = new THREE.DirectionalLight(0xb7d6e8, 1.4);
       rimLight.position.set(-3, 0, -5);
       scene.add(rimLight);
+      
+      const accentLight = new THREE.PointLight(0xb7d6e8, 0.8);
+      accentLight.position.set(0, 5, 3);
+      scene.add(accentLight);
 
       const spotLight = new THREE.SpotLight(0xffffff, 1.0);
       spotLight.position.set(0, 10, 0);
@@ -138,6 +142,6 @@ export const SilverRing3D: React.FC = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative w-80 h-80 md:w-[500px] md:h-[500px] pointer-events-none select-none" />
+    <div ref={containerRef} className="relative w-80 h-80 md:w-[500px] md:h-[500px] pointer-events-none select-none" data-scroll data-scroll-speed="2"  />
   );
 };

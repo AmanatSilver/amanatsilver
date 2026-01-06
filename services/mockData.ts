@@ -1,5 +1,5 @@
 
-import { Product, Collection, HomepageContent } from '../types';
+import { Product, Collection, HomepageContent, Review } from '../types';
 
 export const collections: Collection[] = [
   {
@@ -39,7 +39,11 @@ export const products: Product[] = [
       '/artifact-1.webp',
       '/artifact-2.webp'
     ],
-    featured: true
+    featured: true,
+    tags: ['ring', 'crescent', 'moon', 'stacking', 'minimalist'],
+    category: 'jewelry',
+    price: 2500,
+    isNewArrival: true
   },
   {
     id: 'p2',
@@ -53,7 +57,11 @@ export const products: Product[] = [
       '/artifact-3.webp',
       '/artifact-4.webp'
     ],
-    featured: true
+    featured: true,
+    tags: ['pendant', 'necklace', 'moonlight', 'elegant', 'delicate'],
+    category: 'jewelry',
+    price: 1800,
+    isNewArrival: true
   },
   {
     id: 'p3',
@@ -67,7 +75,10 @@ export const products: Product[] = [
       '/artifact-5.webp',
       '/artifact-6.webp'
     ],
-    featured: false
+    featured: false,
+    tags: ['earrings', 'shimmer', 'elegant', 'sophisticated', 'evening'],
+    category: 'jewelry',
+    price: 3200
   },
   {
     id: 'p4',
@@ -81,7 +92,10 @@ export const products: Product[] = [
       '/artifact-7.webp',
       '/artifact-8.webp'
     ],
-    featured: true
+    featured: true,
+    tags: ['bracelet', 'celestial', 'stars', 'intricate', 'polished'],
+    category: 'jewelry',
+    price: 4500
   },
   {
     id: 'p5',
@@ -95,7 +109,10 @@ export const products: Product[] = [
       '/artifact-9.webp',
       '/artifact-10.webp'
     ],
-    featured: false
+    featured: false,
+    tags: ['cuff', 'bracelet', 'bold', 'statement', 'luminous'],
+    category: 'jewelry',
+    price: 5800
   },
   {
     id: 'p6',
@@ -109,7 +126,10 @@ export const products: Product[] = [
       '/artifact-11.webp',
       '/artifact-12.webp'
     ],
-    featured: true
+    featured: true,
+    tags: ['ring', 'set', 'twilight', 'stacking', 'versatile'],
+    category: 'jewelry',
+    price: 3800
   },
   {
     id: 'p7',
@@ -123,7 +143,10 @@ export const products: Product[] = [
       '/artifact-13.webp',
       '/artifact-14.webp'
     ],
-    featured: false
+    featured: false,
+    tags: ['necklace', 'shimmer', 'cascading', 'elegant', 'light'],
+    category: 'jewelry',
+    price: 6200
   },
   {
     id: 'p8',
@@ -137,7 +160,10 @@ export const products: Product[] = [
       '/artifact-15.webp',
       '/artifact-16.webp'
     ],
-    featured: true
+    featured: true,
+    tags: ['earrings', 'hoops', 'classic', 'luminous', 'elegant'],
+    category: 'jewelry',
+    price: 2900
   },
 
   // Architectural Collection (17-33)
@@ -153,7 +179,10 @@ export const products: Product[] = [
       '/artifact-17.webp',
       '/artifact-18.webp'
     ],
-    featured: true
+    featured: true,
+    tags: ['ring', 'architectural', 'geometric', 'bold', 'statement'],
+    category: 'jewelry',
+    price: 7200
   },
   {
     id: 'p10',
@@ -167,7 +196,10 @@ export const products: Product[] = [
       '/artifact-19.webp',
       '/artifact-20.webp'
     ],
-    featured: true
+    featured: true,
+    tags: ['earrings', 'geometric', 'angular', 'modern', 'drop'],
+    category: 'jewelry',
+    price: 4800
   },
   {
     id: 'p11',
@@ -181,7 +213,10 @@ export const products: Product[] = [
       '/artifact-21.webp',
       '/artifact-22.webp'
     ],
-    featured: false
+    featured: false,
+    tags: ['cuff', 'bracelet', 'angular', 'architectural', 'statement'],
+    category: 'jewelry',
+    price: 8900
   },
   {
     id: 'p12',
@@ -195,7 +230,10 @@ export const products: Product[] = [
       '/artifact-23.webp',
       '/artifact-24.webp'
     ],
-    featured: true
+    featured: true,
+    tags: ['pendant', 'necklace', 'geometric', 'minimalist', 'linear'],
+    category: 'jewelry',
+    price: 3500
   },
   {
     id: 'p13',
@@ -209,7 +247,10 @@ export const products: Product[] = [
       '/artifact-25.webp',
       '/artifact-26.webp'
     ],
-    featured: false
+    featured: false,
+    tags: ['ring', 'prism', 'faceted', 'geometric', 'light'],
+    category: 'jewelry',
+    price: 4200
   },
   {
     id: 'p14',
@@ -223,7 +264,10 @@ export const products: Product[] = [
       '/artifact-27.webp',
       '/artifact-28.webp'
     ],
-    featured: true
+    featured: true,
+    tags: ['earrings', 'studs', 'geometric', 'modern', 'minimalist'],
+    category: 'jewelry',
+    price: 1900
   },
   {
     id: 'p15',
@@ -237,7 +281,10 @@ export const products: Product[] = [
       '/artifact-29.webp',
       '/artifact-30.webp'
     ],
-    featured: false
+    featured: false,
+    tags: ['necklace', 'architectural', 'urban', 'geometric', 'bold'],
+    category: 'jewelry',
+    price: 9500
   },
   {
     id: 'p16',
@@ -251,7 +298,10 @@ export const products: Product[] = [
       '/artifact-31.webp',
       '/artifact-32.webp'
     ],
-    featured: true
+    featured: true,
+    tags: ['bracelet', 'faceted', 'geometric', 'modern', 'dynamic'],
+    category: 'jewelry',
+    price: 5600
   },
   {
     id: 'p17',
@@ -265,7 +315,10 @@ export const products: Product[] = [
       '/artifact-33.webp',
       '/artifact-17.webp'
     ],
-    featured: false
+    featured: false,
+    tags: ['ring', 'architectural', 'bold', 'statement', 'geometric'],
+    category: 'jewelry',
+    price: 11200
   },
 
   // Ethereal Collection (34-49)
@@ -281,7 +334,10 @@ export const products: Product[] = [
       '/artifact-34.webp',
       '/artifact-35.webp'
     ],
-    featured: true
+    featured: true,
+    tags: ['necklace', 'chain', 'delicate', 'ethereal', 'fine'],
+    category: 'jewelry',
+    price: 3700
   },
   {
     id: 'p19',
@@ -295,7 +351,10 @@ export const products: Product[] = [
       '/artifact-36.webp',
       '/artifact-37.webp'
     ],
-    featured: true
+    featured: true,
+    tags: ['earrings', 'floral', 'nature', 'delicate', 'intricate'],
+    category: 'jewelry',
+    price: 2800
   },
   {
     id: 'p20',
@@ -309,7 +368,10 @@ export const products: Product[] = [
       '/artifact-38.webp',
       '/artifact-39.webp'
     ],
-    featured: false
+    featured: false,
+    tags: ['ring', 'delicate', 'ethereal', 'minimalist', 'stacking'],
+    category: 'jewelry',
+    price: 1700
   },
   {
     id: 'p21',
@@ -323,7 +385,10 @@ export const products: Product[] = [
       '/artifact-40.webp',
       '/artifact-41.webp'
     ],
-    featured: true
+    featured: true,
+    tags: ['pendant', 'necklace', 'feather', 'nature', 'delicate'],
+    category: 'jewelry',
+    price: 2400
   },
   {
     id: 'p22',
@@ -337,7 +402,10 @@ export const products: Product[] = [
       '/artifact-42.webp',
       '/artifact-43.webp'
     ],
-    featured: false
+    featured: false,
+    tags: ['bracelet', 'delicate', 'ethereal', 'minimalist', 'fine'],
+    category: 'jewelry',
+    price: 3100
   },
   {
     id: 'p23',
@@ -351,7 +419,10 @@ export const products: Product[] = [
       '/artifact-44.webp',
       '/artifact-45.webp'
     ],
-    featured: true
+    featured: true,
+    tags: ['earrings', 'drop', 'ethereal', 'flowing', 'elegant'],
+    category: 'jewelry',
+    price: 4100
   },
   {
     id: 'p24',
@@ -365,7 +436,10 @@ export const products: Product[] = [
       '/artifact-46.webp',
       '/artifact-47.webp'
     ],
-    featured: false
+    featured: false,
+    tags: ['ring', 'set', 'delicate', 'stacking', 'ethereal'],
+    category: 'jewelry',
+    price: 4600
   },
   {
     id: 'p25',
@@ -379,16 +453,170 @@ export const products: Product[] = [
       '/artifact-48.webp',
       '/artifact-49.webp'
     ],
-    featured: true
+    featured: true,
+    tags: ['necklace', 'delicate', 'flowing', 'ethereal', 'elegant'],
+    category: 'jewelry',
+    price: 7800
+  },
+
+  // Men's Broches
+  {
+    id: 'b1',
+    name: 'Classic Lapel Pin',
+    slug: 'classic-lapel-pin',
+    collectionId: 'c2',
+    description: 'Timeless silver broche with clean geometric design, perfect for formal occasions.',
+    materials: ['925 Sterling Silver', 'Rhodium Plating'],
+    careInstructions: 'Clean with soft cloth. Store in provided box to prevent scratches.',
+    images: [
+      '/artifact-17.webp',
+      '/artifact-18.webp'
+    ],
+    featured: true,
+    tags: ['broche', 'lapel', 'formal', 'geometric', 'classic', 'men'],
+    category: 'broche',
+    price: 2200
+  },
+  {
+    id: 'b2',
+    name: 'Shield Broche',
+    slug: 'shield-broche',
+    collectionId: 'c2',
+    description: 'Bold statement broche with heraldic inspiration and modern execution.',
+    materials: ['Heavyweight 925 Sterling Silver'],
+    careInstructions: 'Avoid impact. Polish regularly to maintain shine.',
+    images: [
+      '/artifact-21.webp',
+      '/artifact-22.webp'
+    ],
+    featured: true,
+    tags: ['broche', 'shield', 'bold', 'statement', 'heraldic', 'men'],
+    category: 'broche',
+    price: 6500
+  },
+  {
+    id: 'b3',
+    name: 'Angular Pin',
+    slug: 'angular-pin',
+    collectionId: 'c2',
+    description: 'Modern broche with sharp architectural lines, ideal for contemporary styling.',
+    materials: ['925 Sterling Silver', 'Anti-tarnish coating'],
+    careInstructions: 'Clean with soft cloth. Handle sharp edges carefully.',
+    images: [
+      '/artifact-25.webp',
+      '/artifact-26.webp'
+    ],
+    featured: false,
+    tags: ['broche', 'angular', 'modern', 'architectural', 'minimalist', 'men'],
+    category: 'broche',
+    price: 1850
+  },
+  {
+    id: 'b4',
+    name: 'Crest Broche',
+    slug: 'crest-broche',
+    collectionId: 'c1',
+    description: 'Elegant broche featuring intricate detailing with a polished finish.',
+    materials: ['925 Sterling Silver'],
+    careInstructions: 'Store in soft pouch. Clean gently to preserve details.',
+    images: [
+      '/artifact-11.webp',
+      '/artifact-12.webp'
+    ],
+    featured: true,
+    tags: ['broche', 'crest', 'elegant', 'intricate', 'polished', 'men'],
+    category: 'broche',
+    price: 3900
+  },
+  {
+    id: 'b5',
+    name: 'Minimalist Tie Pin',
+    slug: 'minimalist-tie-pin',
+    collectionId: 'c2',
+    description: 'Sleek and simple broche perfect for everyday sophistication.',
+    materials: ['925 Sterling Silver', 'Rhodium Plating'],
+    careInstructions: 'Clean weekly. Store separately to avoid scratching.',
+    images: [
+      '/artifact-29.webp',
+      '/artifact-30.webp'
+    ],
+    featured: false,
+    tags: ['broche', 'minimalist', 'tie', 'simple', 'modern', 'men'],
+    category: 'broche',
+    price: 1600
+  },
+  {
+    id: 'b6',
+    name: 'Ornate Lapel Broche',
+    slug: 'ornate-lapel-broche',
+    collectionId: 'c3',
+    description: 'Detailed broche with delicate craftsmanship for special occasions.',
+    materials: ['925 Sterling Silver', 'Anti-tarnish coating'],
+    careInstructions: 'Handle with care. Professional cleaning recommended.',
+    images: [
+      '/artifact-36.webp',
+      '/artifact-37.webp'
+    ],
+    featured: true,
+    tags: ['broche', 'ornate', 'detailed', 'special', 'delicate', 'men'],
+    category: 'broche',
+    price: 4700
   }
 ];
 
 export const homepageContent: HomepageContent = {
-  heroTitle: 'Amanat Silver',
-  heroSubtitle: 'Modern Sculptures for the Human Form',
+  heroTitle: 'Amanat',
+  heroSubtitle: 'Your Silver Atelier',
   heroImage: '/artifact-1.webp',
-  brandStoryShort: 'Founded on the principle that jewellery is a silent dialogue between the artist and the wearer, Amanat Silver creates timeless silver pieces that transcend seasons.',
+  brandStoryShort: 'Founded in 2024 on the principle that jewellery is a silent dialogue between the artist and the wearer, Amanat creates timeless silver pieces that transcend seasons.',
   craftsmanshipTitle: 'The Art of the Forge',
-  craftsmanshipDescription: 'Every piece begins in our atelier as a raw silver ingot. Through heat, pressure, and meticulous hand-tooling, we bring form to the void.',
+  craftsmanshipDescription: 'Every piece begins in our Indian atelier as a raw silver ingot. Through heat, pressure, and meticulous hand-tooling, we bring form to the void.',
   craftsmanshipImage: '/artifact-25.webp'
 };
+
+export const reviews: Review[] = [
+  {
+    id: 'r1',
+    name: 'Charlotte Hayes',
+    location: 'Mumbai, India',
+    rating: 5,
+    text: 'The Luna Crescent Ring is absolutely stunning. The craftsmanship is impeccable, and it feels like wearing art. I receive compliments every time I wear it.',
+    product: 'Luna Crescent Ring',
+    date: '2025-12-15'
+  },
+  {
+    id: 'r2',
+    name: 'Sophie Laurent',
+    location: 'Paris, France',
+    rating: 5,
+    text: 'Exquisite attention to detail. The silver has such a beautiful finish and weight. This is luxury jewellery that will last a lifetime.',
+    product: 'Whisper Chain Necklace',
+    date: '2025-12-08'
+  },
+  {
+    id: 'r3',
+    name: 'Emma Richardson',
+    location: 'New York, USA',
+    rating: 5,
+    text: 'I visited the atelier in India and was blown away by the craftsmanship. Each piece tells a story. The service was exceptional and very personal.',
+    date: '2025-11-22'
+  },
+  {
+    id: 'r4',
+    name: 'Isabella Martinez',
+    location: 'Barcelona, Spain',
+    rating: 5,
+    text: 'The Geometric Drop Earrings are architectural masterpieces. They are surprisingly lightweight yet substantial. Truly unique design.',
+    product: 'Geometric Drop Earrings',
+    date: '2025-11-30'
+  },
+  {
+    id: 'r5',
+    name: 'Amelia Thompson',
+    location: 'Melbourne, Australia',
+    rating: 5,
+    text: 'Outstanding quality and elegance. The packaging alone shows the care and attention to detail. This is jewellery that transcends trends.',
+    product: 'Celestial Bracelet',
+    date: '2025-12-01'
+  }
+];

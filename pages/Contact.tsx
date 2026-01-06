@@ -36,7 +36,7 @@ const Contact: React.FC = () => {
           <div data-scroll data-scroll-speed="0.5">
             <h1 className="text-6xl font-light mb-12 serif tracking-tight gsap-fade-up">Initiate a Conversation</h1>
             <p className="text-stone-500 font-light leading-relaxed text-lg mb-12 gsap-fade-up">
-              Our pieces are often bespoke or produced in limited editions. Please use the form to enquire about availability, private commissions, or to schedule an appointment at our London atelier.
+              Our pieces are often bespoke or produced in limited editions. Please use the form to enquire about availability, private commissions, or to schedule an appointment at our Indian atelier.
             </p>
             
             <div className="space-y-12 gsap-fade-up">

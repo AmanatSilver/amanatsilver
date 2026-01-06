@@ -25,13 +25,13 @@ const About: React.FC = () => {
             </div>
             <div className="space-y-12" data-scroll data-scroll-speed="-1">
               <h3 className="text-3xl font-light serif leading-snug">
-                Amanat Silver was born from a desire to reclaim the slow, deliberate art of metalwork.
+                Amanat was born in 2024 in India from a desire to reclaim the slow, deliberate art of metalwork.
               </h3>
               <p className="text-stone-500 font-light leading-relaxed text-lg">
                 In a world of mass production, we choose the path of resistance. Each piece we create is an investigation into the properties of 925 sterling silver—its weight, its warmth, and its remarkable ability to hold a story.
               </p>
               <p className="text-stone-500 font-light leading-relaxed text-lg">
-                Our London atelier is a sanctuary of focus. We sculpt interfaces between the body and the environment.
+                Our Indian atelier is a sanctuary of focus. We sculpt interfaces between the body and the environment.
               </p>
               <div className="pt-12">
                 <div className="w-16 h-[1px] bg-stone-900 mb-8"></div>

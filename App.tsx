@@ -3,6 +3,9 @@ import React, { useState } from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Collections from './pages/Collections';
+import Broches from './pages/Broches';
+import Search from './pages/Search';
+import ShopByPrice from './pages/ShopByPrice';
 import ProductDetail from './pages/ProductDetail';
 import About from './pages/About';
 import Contact from './pages/Contact';
@@ -47,6 +50,9 @@ const App: React.FC = () => {
                   <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/collections" element={<Collections />} />
+                    <Route path="/broches" element={<Broches />} />
+                    <Route path="/search" element={<Search />} />
+                    <Route path="/shop-by-price/:range" element={<ShopByPrice />} />
                     <Route path="/product/:slug" element={<ProductDetail />} />
                     <Route path="/about" element={<About />} />
                     <Route path="/contact" element={<Contact />} />

@@ -225,7 +225,7 @@ const Checkout: React.FC = () => {
 
                 <div className="bg-stone-50 rounded-lg p-6">
                   <p className="text-xs text-stone-500 font-light leading-relaxed">
-                    Each piece at Amanat Silver is crafted to order. Upon placing your order, our artisans will begin handcrafting your bespoke pieces. We will contact you shortly to discuss final pricing, customization options, and estimated completion time.
+                    Each piece at Amanat is crafted to order. Upon placing your order, our artisans will begin handcrafting your bespoke pieces. We will contact you shortly to discuss final pricing, customization options, and estimated completion time.
                   </p>
                 </div>
               </div>

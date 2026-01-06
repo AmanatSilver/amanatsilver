@@ -19,9 +19,10 @@ export const useLocomotiveScroll = () => {
         el: containerRef.current,
         smooth: true,
         multiplier: 1.0,
-        lerp: 0.08,
+        lerp: 0.1,
         tablet: { smooth: true },
-        smartphone: { smooth: true },
+        smartphone: { smooth: false },
+        reloadOnContextChange: true,
       });
 
       // Listen for custom scroll update event
@@ -31,6 +32,21 @@ export const useLocomotiveScroll = () => {
         }
       };
       window.addEventListener('updateScroll', handleUpdateScroll);
+
+      // Update on resize
+      const handleResize = () => {
+        if (scrollRef.current) {
+          scrollRef.current.update();
+        }
+      };
+      window.addEventListener('resize', handleResize);
+
+      // Initial update after a short delay
+      setTimeout(() => {
+        if (scrollRef.current) {
+          scrollRef.current.update();
+        }
+      }, 100);
 
       // Sync with GSAP ScrollTrigger
       scrollRef.current.on('scroll', ScrollTrigger.update);
@@ -51,6 +67,7 @@ export const useLocomotiveScroll = () => {
 
       return () => {
         window.removeEventListener('updateScroll', handleUpdateScroll);
+        window.removeEventListener('resize', handleResize);
         scrollRef.current?.destroy();
         ScrollTrigger.removeEventListener('refresh', () => scrollRef.current?.update());
       };
@@ -62,9 +79,11 @@ export const useLocomotiveScroll = () => {
   // Update scroll on route change
   useEffect(() => {
     if (scrollRef.current) {
-      scrollRef.current.update();
-      scrollRef.current.scrollTo(0, { duration: 0, disableLerp: true });
-      ScrollTrigger.refresh();
+      setTimeout(() => {
+        scrollRef.current.update();
+        scrollRef.current.scrollTo(0, { duration: 0, disableLerp: true });
+        ScrollTrigger.refresh();
+      }, 100);
     }
   }, [location]);
 

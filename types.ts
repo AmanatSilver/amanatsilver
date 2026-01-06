@@ -9,6 +9,10 @@ export interface Product {
   careInstructions: string;
   images: string[];
   featured: boolean;
+  tags: string[];
+  category?: 'jewelry' | 'broche';
+  price: number;
+  isNewArrival?: boolean;
 }
 
 export interface Collection {
@@ -36,4 +40,14 @@ export interface HomepageContent {
   craftsmanshipTitle: string;
   craftsmanshipDescription: string;
   craftsmanshipImage: string;
+}
+
+export interface Review {
+  id: string;
+  name: string;
+  location: string;
+  rating: number;
+  text: string;
+  product?: string;
+  date: string;
 }
