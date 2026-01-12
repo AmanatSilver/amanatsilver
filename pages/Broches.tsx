@@ -44,7 +44,7 @@ const Broches: React.FC = () => {
           </p>
         </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20" data-scroll data-scroll-speed="0.3">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-x-6 md:gap-x-12 gap-y-12 md:gap-y-20" data-scroll data-scroll-speed="0.3">
           {products.map((product, idx) => (
             <Link 
               key={product.id} 

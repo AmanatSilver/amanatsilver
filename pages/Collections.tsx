@@ -7,7 +7,7 @@ import { Product, Collection } from '../types';
 const Collections: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [collections, setCollections] = useState<Collection[]>([]);
-  const [activeFilter, setActiveFilter] = useState<string>('all');
+  const [activeFilter, setActiveFilter] = useState<string>('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -21,6 +21,10 @@ const Collections: React.FC = () => {
         const jewelryProducts = p.filter(product => product.category === 'jewelry');
         setProducts(jewelryProducts);
         setCollections(c);
+        // Set the first collection as the default filter
+        if (c.length > 0) {
+          setActiveFilter(c[0].id);
+        }
       } catch (err) {
         console.error(err);
       } finally {
@@ -45,9 +49,7 @@ const Collections: React.FC = () => {
     }
   }, [activeFilter, loading]);
 
-  const filteredProducts = activeFilter === 'all' 
-    ? products 
-    : products.filter(p => p.collectionId === activeFilter);
+  const filteredProducts = products.filter(p => p.collectionId === activeFilter);
 
   if (loading) {
     return (
@@ -67,12 +69,6 @@ const Collections: React.FC = () => {
           </p>
           
           <div className="flex flex-wrap justify-center gap-8 border-y border-stone-200 py-6 gsap-fade-up">
-            <button 
-              onClick={() => setActiveFilter('all')}
-              className={`text-[10px] uppercase tracking-[0.3em] line-reveal ${activeFilter === 'all' ? 'opacity-100 font-bold' : 'opacity-40'}`}
-            >
-              All Works
-            </button>
             {collections.map(c => (
               <button 
                 key={c.id}
@@ -85,7 +81,7 @@ const Collections: React.FC = () => {
           </div>
         </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20" data-scroll data-scroll-speed="0.3">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-x-6 md:gap-x-12 gap-y-12 md:gap-y-20" data-scroll data-scroll-speed="0.3">
           {filteredProducts.map((product, idx) => (
             <Link 
               key={product.id} 

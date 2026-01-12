@@ -8,9 +8,15 @@ interface NewArrivalsProps {
 
 export const NewArrivals: React.FC<NewArrivalsProps> = ({ products }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [mounted, setMounted] = useState(false);
   
   // Filter products marked as new arrivals
   const newArrivals = products.filter(p => p.isNewArrival);
+  
+  // Ensure component is mounted
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   
   // Auto-rotate every 5 seconds
   useEffect(() => {
@@ -23,15 +29,17 @@ export const NewArrivals: React.FC<NewArrivalsProps> = ({ products }) => {
     return () => clearInterval(interval);
   }, [newArrivals.length]);
   
-  if (newArrivals.length === 0) return null;
+  if (newArrivals.length === 0 || !mounted) return null;
   
   const currentProduct = newArrivals[currentIndex];
   
+  if (!currentProduct) return null;
+  
   return (
-    <section className="py-20 md:py-32 bg-gradient-to-b from-white to-[#f8f6f3]">
+    <section className="py-20 md:py-32 bg-gradient-to-b from-white to-[#f8f6f3]" data-scroll-section>
       <div className="max-w-7xl mx-auto px-6">
         {/* Section Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-16" data-scroll>
           <p className="font-['Montserrat'] text-xs uppercase tracking-[0.3em] text-[#c9b27d] mb-4">
             Latest Additions
           </p>
@@ -41,17 +49,18 @@ export const NewArrivals: React.FC<NewArrivalsProps> = ({ products }) => {
         </div>
         
         {/* Product Showcase */}
-        <div className="grid md:grid-cols-2 gap-12 items-center">
+        <div key={currentProduct.id} className="grid md:grid-cols-2 gap-12 items-center" data-scroll>
           {/* Image */}
           <Link 
             to={`/product/${currentProduct.slug}`}
-            className="group relative overflow-hidden rounded-2xl bg-white shadow-xl"
+            className="group relative overflow-hidden rounded-2xl bg-white shadow-xl will-change-transform"
           >
             <div className="aspect-[4/5] overflow-hidden">
               <img 
                 src={currentProduct.images[0]} 
                 alt={currentProduct.name}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                loading="eager"
               />
             </div>
             
@@ -64,7 +73,7 @@ export const NewArrivals: React.FC<NewArrivalsProps> = ({ products }) => {
           </Link>
           
           {/* Content */}
-          <div className="space-y-6">
+          <div className="space-y-6 min-h-[400px] flex flex-col justify-center">
             <div>
               <h3 className="font-['Cormorant_Garamond'] text-4xl md:text-5xl font-light text-gray-800 mb-4">
                 {currentProduct.name}
