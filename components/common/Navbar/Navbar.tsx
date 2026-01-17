@@ -133,30 +133,33 @@ export const Navbar: React.FC = () => {
           </Link>
 
           {/* Search Bar - Desktop */}
-          <form onSubmit={handleSearch} className="hidden md:flex items-center flex-1 max-w-xs relative" ref={searchRef}>
+          <form onSubmit={handleSearch} className="hidden md:flex items-center flex-1 max-w-md relative group" ref={searchRef}>
             <div className="relative w-full">
               <input 
                 type="text" 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => searchResults.length > 0 && setShowDropdown(true)}
-                placeholder="Search..."
-                className="w-full bg-white/50 border border-stone-200/50 rounded-full px-4 py-1.5 text-xs focus:outline-none focus:border-stone-300 placeholder:text-stone-400"
+                placeholder="Search exquisite pieces..."
+                className="w-full bg-gradient-to-r from-stone-50/80 to-stone-100/60 border border-stone-300/30 rounded-full px-5 py-2 pr-10 text-xs font-light tracking-wide focus:outline-none focus:border-[#c9b27d]/50 focus:shadow-lg focus:shadow-[#c9b27d]/10 placeholder:text-stone-400/70 placeholder:italic placeholder:font-light transition-all duration-500 hover:border-[#c9b27d]/30 hover:shadow-md hover:shadow-[#c9b27d]/5"
+                style={{ backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}
               />
-              <button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2 opacity-40 hover:opacity-100">
+              <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-[#c9b27d] transition-all duration-300 group-hover:scale-110">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </button>
 
               {/* Search Dropdown */}
               {showDropdown && (
-                <div className="absolute top-full mt-2 left-0 right-0 bg-white rounded-2xl shadow-2xl border border-stone-200 overflow-hidden z-50 max-h-96 overflow-y-auto">
+                <div className="absolute top-full mt-3 left-0 right-0 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-stone-200/50 overflow-hidden z-50 max-h-96 overflow-y-auto" style={{ backdropFilter: 'blur(20px) saturate(180%)', WebkitBackdropFilter: 'blur(20px) saturate(180%)' }}>
                   {isSearching ? (
-                    <div className="p-4 text-center text-xs text-stone-400">Searching...</div>
+                    <div className="p-6 text-center">
+                      <div className="text-[10px] uppercase tracking-[0.3em] text-stone-400 font-light animate-pulse">Searching...</div>
+                    </div>
                   ) : searchResults.length > 0 ? (
                     <div className="py-2">
-                      {searchResults.map((product) => (
+                      {searchResults.map((product, idx) => (
                         <Link
                           key={product.id}
                           to={`/product/${product.slug}`}
@@ -164,21 +167,22 @@ export const Navbar: React.FC = () => {
                             setSearchQuery('');
                             setShowDropdown(false);
                           }}
-                          className="flex items-center gap-3 px-4 py-3 hover:bg-stone-50 transition-colors"
+                          className="flex items-center gap-4 px-5 py-4 hover:bg-gradient-to-r hover:from-[#c9b27d]/5 hover:to-transparent transition-all duration-300 border-b border-stone-100/50 last:border-b-0 group"
+                          style={{ animationDelay: `${idx * 50}ms` }}
                         >
-                          <div className="w-12 h-12 rounded-lg overflow-hidden bg-stone-100 flex-shrink-0">
+                          <div className="w-14 h-14 rounded-xl overflow-hidden bg-stone-100 flex-shrink-0 shadow-sm group-hover:shadow-md transition-shadow">
                             <img 
                               src={product.images[0]} 
                               alt={product.name}
-                              className="w-full h-full object-cover"
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                             />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-xs font-medium text-stone-900 truncate">{product.name}</p>
-                            <p className="text-[10px] text-stone-500 truncate">{product.description.slice(0, 50)}...</p>
-                            <div className="flex gap-1 mt-1">
+                            <p className="text-xs font-light serif text-stone-900 truncate mb-1 group-hover:text-[#c9b27d] transition-colors">{product.name}</p>
+                            <p className="text-[10px] text-stone-500 truncate font-light leading-relaxed">{product.description.slice(0, 50)}...</p>
+                            <div className="flex gap-1.5 mt-2">
                               {product.tags.slice(0, 2).map((tag, i) => (
-                                <span key={i} className="text-[8px] uppercase px-1.5 py-0.5 bg-stone-100 text-stone-600 rounded">
+                                <span key={i} className="text-[8px] uppercase tracking-wider px-2 py-0.5 bg-stone-50 text-stone-500 rounded-md font-medium border border-stone-200/30">
                                   {tag}
                                 </span>
                               ))}
@@ -193,7 +197,7 @@ export const Navbar: React.FC = () => {
                             setSearchQuery('');
                             setShowDropdown(false);
                           }}
-                          className="w-full px-4 py-3 text-xs text-center text-stone-600 hover:bg-stone-50 border-t border-stone-100"
+                          className="w-full px-5 py-4 text-[10px] uppercase tracking-[0.25em] text-center font-medium text-[#c9b27d] hover:bg-[#c9b27d]/5 border-t border-stone-200/50 transition-all duration-300"
                         >
                           View all results →
                         </button>

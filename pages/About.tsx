@@ -3,8 +3,8 @@ import React from 'react';
 
 const About: React.FC = () => {
   return (
-    <div className="bg-stone-50">
-      <section className="pt-48 pb-32 container mx-auto px-6" data-scroll-section>
+    <div className="bg-stone-50" data-scroll-section>
+      <section className="pt-48 pb-32 container mx-auto px-6">
         <div className="max-w-4xl mx-auto text-center" data-scroll data-scroll-speed="2">
           <h1 className="text-sm uppercase tracking-[0.6em] text-stone-400 mb-12">Our Story</h1>
           <h2 className="text-6xl md:text-8xl font-light mb-16 serif italic tracking-tighter">
@@ -13,7 +13,7 @@ const About: React.FC = () => {
         </div>
       </section>
 
-      <section className="pb-48" data-scroll-section>
+      <section className="pb-48">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-24 items-center">
             <div className="aspect-[3/4] overflow-hidden" data-scroll data-scroll-speed="1">
@@ -42,7 +42,7 @@ const About: React.FC = () => {
         </div>
       </section>
 
-      <section className="bg-stone-100 py-48" data-scroll-section>
+      <section className="bg-stone-100 py-48">
         <div className="container mx-auto px-6 text-center max-w-3xl">
           <h2 className="text-sm uppercase tracking-[0.6em] text-stone-400 mb-12" data-scroll data-scroll-speed="0.5">The Atelier</h2>
           <h3 className="text-5xl font-light mb-12 serif italic" data-scroll data-scroll-speed="0.7">Responsible Luxury</h3>

@@ -9,13 +9,8 @@ const navigationLinks = [
 
 const socialLinks = [
   { name: 'Instagram', href: '#' },
-  { name: 'Mailing List', href: '#' },
 ];
 
-const legalLinks = [
-  { name: 'Legal', href: '#' },
-  { name: 'Privacy', href: '#' },
-];
 
 export const Footer: React.FC = () => {
   return (
@@ -57,13 +52,6 @@ export const Footer: React.FC = () => {
         </div>
         <div className="pt-12 md:pt-16 lg:pt-20 flex flex-col md:flex-row justify-between items-center text-[8px] md:text-[9px] uppercase tracking-[0.3em] md:tracking-[0.5em] text-stone-500 gap-6 md:gap-0">
           <p>© 2024 Amanat - Your Silver Atelier</p>
-          <div className="flex space-x-8 md:space-x-16">
-            {legalLinks.map((link) => (
-              <a key={link.name} href={link.href} className="hover:text-stone-300">
-                {link.name}
-              </a>
-            ))}
-          </div>
         </div>
       </div>
     </footer>
