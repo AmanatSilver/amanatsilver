@@ -10,8 +10,9 @@ export const NewArrivals: React.FC<NewArrivalsProps> = ({ products }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [mounted, setMounted] = useState(false);
   
-  // Filter products marked as new arrivals
-  const newArrivals = products.filter(p => p.isNewArrival);
+  // Products are already filtered from backend's /products/new-arrivals endpoint
+  // But keep the filter as a safety check
+  const newArrivals = products.filter(p => p.isNewArrival !== false);
   
   // Ensure component is mounted
   useEffect(() => {
