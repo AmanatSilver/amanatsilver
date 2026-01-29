@@ -268,16 +268,33 @@ export const Navbar: React.FC = () => {
             </Link>
           </div>
 
-          {/* Mobile Hamburger */}
-          <button 
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden flex flex-col gap-1 sm:gap-1.5 w-5 sm:w-6 h-5 sm:h-6 justify-center items-center group flex-shrink-0"
-            aria-label="Toggle menu"
-          >
-            <span className={`w-full h-0.5 bg-stone-900 transition-all duration-300 ${isMobileMenuOpen ? 'rotate-45 translate-y-1.5 sm:translate-y-2' : ''}`}></span>
-            <span className={`w-full h-0.5 bg-stone-900 transition-all duration-300 ${isMobileMenuOpen ? 'opacity-0' : ''}`}></span>
-            <span className={`w-full h-0.5 bg-stone-900 transition-all duration-300 ${isMobileMenuOpen ? '-rotate-45 -translate-y-1.5 sm:-translate-y-2' : ''}`}></span>
-          </button>
+          {/* Mobile Cart and Hamburger */}
+          <div className="md:hidden flex items-center gap-3 sm:gap-4">
+            <Link 
+              to="/cart"
+              className="relative opacity-40 hover:opacity-100 transition-all"
+              aria-label="Shopping Cart"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+              </svg>
+              {getCartItemsCount() > 0 && (
+                <span className="absolute -top-2 -right-2 text-white text-[9px] w-5 h-5 rounded-full flex items-center justify-center font-medium" style={{ backgroundColor: '#c9b27d' }}>
+                  {getCartItemsCount()}
+                </span>
+              )}
+            </Link>
+            
+            <button 
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="flex flex-col gap-1 sm:gap-1.5 w-5 sm:w-6 h-5 sm:h-6 justify-center items-center group flex-shrink-0"
+              aria-label="Toggle menu"
+            >
+              <span className={`w-full h-0.5 bg-stone-900 transition-all duration-300 ${isMobileMenuOpen ? 'rotate-45 translate-y-1.5 sm:translate-y-2' : ''}`}></span>
+              <span className={`w-full h-0.5 bg-stone-900 transition-all duration-300 ${isMobileMenuOpen ? 'opacity-0' : ''}`}></span>
+              <span className={`w-full h-0.5 bg-stone-900 transition-all duration-300 ${isMobileMenuOpen ? '-rotate-45 -translate-y-1.5 sm:-translate-y-2' : ''}`}></span>
+            </button>
+          </div>
         </div>
       </nav>
 
@@ -311,16 +328,6 @@ export const Navbar: React.FC = () => {
               </Link>
             ))}
           </div>
-          
-          <Link 
-            to="/cart"
-            className="text-xs sm:text-sm uppercase tracking-[0.3em] sm:tracking-[0.4em] transition-all text-white opacity-60 hover:opacity-100 flex items-center gap-3 font-semibold mt-4"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-            </svg>
-            Cart {getCartItemsCount() > 0 && `(${getCartItemsCount()})`}
-          </Link>
         </div>
       </div>
     </>
