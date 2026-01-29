@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { apiService } from '../services/api';
-import { Product, HomepageContent, Collection } from '../types';
-import { reviews } from '../services/mockData';
+import { Product, HomepageContent, Collection, Review } from '../types';
 import { useGSAPAnimation } from '../hooks';
 import {
   HeroSection,
@@ -16,7 +15,8 @@ const Home: React.FC = () => {
   const [data, setData] = useState<HomepageContent | null>(null);
   const [featured, setFeatured] = useState<Product[]>([]);
   const [collections, setCollections] = useState<Collection[]>([]);
-  const [allProducts, setAllProducts] = useState<Product[]>([]);
+  const [newArrivals, setNewArrivals] = useState<Product[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   
   const heroRef = useGSAPAnimation(loading, data);
@@ -24,16 +24,18 @@ const Home: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [hp, feat, colls, prods] = await Promise.all([
+        const [hp, feat, colls, newArr, revs] = await Promise.all([
           apiService.getHomepage(),
           apiService.getFeaturedProducts(),
           apiService.getCollections(),
-          apiService.getProducts()
+          apiService.getNewArrivals(),
+          apiService.getReviews()
         ]);
         setData(hp);
         setFeatured(feat);
         setCollections(colls);
-        setAllProducts(prods);
+        setNewArrivals(newArr);
+        setReviews(revs);
       } catch (error) {
         console.error("Home data failed:", error);
       } finally {
@@ -62,7 +64,7 @@ const Home: React.FC = () => {
       
       <CollectionGrid collections={collections} />
       
-      <NewArrivals products={allProducts} />
+      <NewArrivals products={newArrivals} />
       
       <SignatureItems featured={featured} />
       

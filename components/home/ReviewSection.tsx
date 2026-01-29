@@ -24,6 +24,11 @@ export const ReviewSection: React.FC<ReviewSectionProps> = ({ reviews, monthlyIm
 
   const currentReview = reviews[currentReviewIndex];
 
+  // Don't render if no reviews available
+  if (!reviews || reviews.length === 0 || !currentReview) {
+    return null;
+  }
+
   return (
     <section className="bg-stone-900 text-stone-100 py-20 md:py-32 overflow-hidden" data-scroll-section>
       <div className="container mx-auto px-6 md:px-12">

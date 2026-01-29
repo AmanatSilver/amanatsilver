@@ -1,6 +1,7 @@
 
 export interface Product {
   id: string;
+  _id?: string; // MongoDB ID
   name: string;
   slug: string;
   collectionId: string;
@@ -17,6 +18,7 @@ export interface Product {
 
 export interface Collection {
   id: string;
+  _id?: string; // MongoDB ID
   name: string;
   slug: string;
   description: string;
@@ -25,6 +27,7 @@ export interface Collection {
 
 export interface Enquiry {
   id: string;
+  _id?: string; // MongoDB ID
   name: string;
   email: string;
   message: string;
@@ -44,6 +47,7 @@ export interface HomepageContent {
 
 export interface Review {
   id: string;
+  _id?: string; // MongoDB ID
   name: string;
   location: string;
   rating: number;
