@@ -70,6 +70,7 @@ const ProductsManager: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [formData, setFormData] = useState<Partial<Product>>({});
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
 
   useEffect(() => {
     fetchData();
@@ -99,8 +100,9 @@ const ProductsManager: React.FC = () => {
         return;
       }
 
-      if (!formData.images || formData.images.length === 0 || formData.images[0] === '') {
-        alert('Please provide at least one product image');
+      // For new products, check image files; for updates, either files or existing images
+      if (!editingProduct && imageFiles.length === 0) {
+        alert('Please upload at least one product image');
         return;
       }
 
@@ -109,30 +111,46 @@ const ProductsManager: React.FC = () => {
         return;
       }
 
-      // Clean data before sending
-      const dataToSave = { ...formData };
+      // Create FormData for file upload
+      const formDataToSend = new FormData();
       
-      // Remove slug - backend auto-generates it from name
-      delete dataToSave.slug;
+      // Add basic fields
+      formDataToSend.append('name', formData.name);
+      formDataToSend.append('collectionId', formData.collectionId);
+      formDataToSend.append('description', formData.description);
+      formDataToSend.append('price', formData.price.toString());
+      formDataToSend.append('careInstructions', formData.careInstructions);
+      formDataToSend.append('featured', (formData.featured || false).toString());
+      formDataToSend.append('isNewArrival', (formData.isNewArrival || false).toString());
+      formDataToSend.append('category', formData.category || 'jewelry');
       
-      // Remove empty strings from arrays
-      if (dataToSave.materials) {
-        dataToSave.materials = dataToSave.materials.filter(m => m.trim() !== '');
+      // Add arrays
+      if (formData.materials && formData.materials.length > 0) {
+        formData.materials.filter(m => m.trim() !== '').forEach(material => {
+          formDataToSend.append('materials', material);
+        });
       }
-      if (dataToSave.tags) {
-        dataToSave.tags = dataToSave.tags.filter(t => t.trim() !== '');
+      
+      if (formData.tags && formData.tags.length > 0) {
+        formData.tags.filter(t => t.trim() !== '').forEach(tag => {
+          formDataToSend.append('tags', tag);
+        });
       }
-      if (dataToSave.images) {
-        dataToSave.images = dataToSave.images.filter(i => i.trim() !== '');
-      }
+      
+      // Add image files
+      imageFiles.forEach((file) => {
+        formDataToSend.append('images', file);
+      });
 
       if (editingProduct) {
-        await apiService.updateProduct(getId(editingProduct), dataToSave);
+        await apiService.updateProduct(getId(editingProduct), formDataToSend);
       } else {
-        await apiService.createProduct(dataToSave as Omit<Product, 'id' | '_id' | 'slug'>);
+        await apiService.createProduct(formDataToSend);
       }
+      
       setEditingProduct(null);
       setFormData({});
+      setImageFiles([]);
       fetchData();
     } catch (error) {
       console.error('Failed to save product:', error);
@@ -155,10 +173,12 @@ const ProductsManager: React.FC = () => {
   const startEdit = (product: Product) => {
     setEditingProduct(product);
     setFormData(product);
+    setImageFiles([]);
   };
 
   const startNew = () => {
     setEditingProduct(null);
+    setImageFiles([]);
     setFormData({
       name: '',
       collectionId: '',
@@ -170,6 +190,7 @@ const ProductsManager: React.FC = () => {
       tags: [],
       price: 0,
       isNewArrival: false,
+      category: 'jewelry',
     });
   };
 
@@ -229,6 +250,15 @@ const ProductsManager: React.FC = () => {
               min="0"
               step="0.01"
             />
+            <select
+              value={formData.category || 'jewelry'}
+              onChange={(e) => setFormData({ ...formData, category: e.target.value as 'jewelry' | 'broche' })}
+              className="px-3 py-2 border rounded-md"
+              required
+            >
+              <option value="jewelry">Jewelry</option>
+              <option value="broche">Broche</option>
+            </select>
             <textarea
               placeholder="Description *"
               value={formData.description || ''}
@@ -246,16 +276,32 @@ const ProductsManager: React.FC = () => {
               }
               className="px-3 py-2 border rounded-md col-span-2"
             />
-            <input
-              type="text"
-              placeholder="Images (comma separated URLs) *"
-              value={formData.images?.join(', ') || ''}
-              onChange={(e) =>
-                setFormData({ ...formData, images: e.target.value.split(',').map((s) => s.trim()) })
-              }
-              className="px-3 py-2 border rounded-md col-span-2"
-              required
-            />
+            <div className="col-span-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Product Images * (Upload multiple images)
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={(e) => {
+                  if (e.target.files) {
+                    setImageFiles(Array.from(e.target.files));
+                  }
+                }}
+                className="px-3 py-2 border rounded-md w-full"
+              />
+              {imageFiles.length > 0 && (
+                <div className="mt-2 text-sm text-gray-600">
+                  {imageFiles.length} file(s) selected: {imageFiles.map(f => f.name).join(', ')}
+                </div>
+              )}
+              {editingProduct && formData.images && formData.images.length > 0 && imageFiles.length === 0 && (
+                <div className="mt-2 text-sm text-gray-600">
+                  Current images: {formData.images.length} image(s)
+                </div>
+              )}
+            </div>
             <input
               type="text"
               placeholder="Tags (comma separated)"
@@ -303,6 +349,7 @@ const ProductsManager: React.FC = () => {
               onClick={() => {
                 setEditingProduct(null);
                 setFormData({});
+                setImageFiles([]);
               }}
               className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-md"
             >
