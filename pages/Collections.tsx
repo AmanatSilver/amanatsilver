@@ -23,7 +23,7 @@ const Collections: React.FC = () => {
         setCollections(c);
         // Set the first collection as the default filter
         if (c.length > 0) {
-          setActiveFilter(c[0].id);
+          setActiveFilter(c[0]._id || c[0].id);
         }
       } catch (err) {
         console.error(err);
@@ -71,9 +71,9 @@ const Collections: React.FC = () => {
           <div className="flex flex-wrap justify-center gap-8 border-y border-stone-200 py-6 gsap-fade-up">
             {collections.map(c => (
               <button 
-                key={c.id}
-                onClick={() => setActiveFilter(c.id)}
-                className={`text-[10px] uppercase tracking-[0.3em] line-reveal ${activeFilter === c.id ? 'opacity-100 font-bold' : 'opacity-40'}`}
+                key={c._id || c.id}
+                onClick={() => setActiveFilter(c._id || c.id)}
+                className={`text-[10px] uppercase tracking-[0.3em] line-reveal ${activeFilter === (c._id || c.id) ? 'opacity-100 font-bold' : 'opacity-40'}`}
               >
                 {c.name}
               </button>
@@ -84,27 +84,33 @@ const Collections: React.FC = () => {
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-x-6 md:gap-x-12 gap-y-12 md:gap-y-20" data-scroll data-scroll-speed="0.3">
           {filteredProducts.map((product, idx) => (
             <Link 
-              key={product.id} 
+              key={product._id || product.id} 
               to={`/product/${product.slug}`} 
               className="group block gsap-fade-up"
               style={{ animationDelay: `${idx * 0.1}s` }}
             >
               <div className="relative aspect-[3/4] bg-stone-200 overflow-hidden mb-8 rounded-2xl">
-                <img 
-                  src={product.images[0]} 
-                  alt={product.name}
-                  className="w-full h-full object-cover object-center luxury-transition group-hover:scale-105"
-                />
+                {product.images && product.images.length > 0 ? (
+                  <img 
+                    src={product.images[0]} 
+                    alt={product.name}
+                    className="w-full h-full object-cover object-center luxury-transition group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-stone-400 text-sm">
+                    No Image
+                  </div>
+                )}
                 <div className="absolute inset-0 bg-stone-900/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               </div>
               <div className="text-center px-4">
                 <p className="text-[10px] uppercase tracking-[0.3em] text-stone-400 mb-2">
-                  {collections.find(c => c.id === product.collectionId)?.name} Collection
+                  {collections.find(c => (c._id || c.id) === product.collectionId)?.name} Collection
                 </p>
                 <h3 className="text-2xl font-light tracking-wide mb-3 serif">{product.name}</h3>
                 <div className="flex flex-wrap gap-2 justify-center mb-4">
-                  {product.tags.slice(0, 3).map((tag, i) => (
-                    <span key={i} className="text-[8px] uppercase tracking-wider px-2 py-1 bg-stone-100 text-stone-500 rounded">
+                  {product.tags.slice(0, 3).map((tag) => (
+                    <span key={tag} className="text-[8px] uppercase tracking-wider px-2 py-1 bg-stone-100 text-stone-500 rounded">
                       {tag}
                     </span>
                   ))}

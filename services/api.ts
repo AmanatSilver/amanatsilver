@@ -21,10 +21,15 @@ const apiRequest = async <T>(
   options: RequestInit = {}
 ): Promise<T> => {
   const token = getAuthToken();
-  const headers: HeadersInit = {
-    'Content-Type': 'application/json',
-    ...options.headers,
-  };
+  
+  // Don't set Content-Type for FormData - browser will set it with boundary
+  const isFormData = options.body instanceof FormData;
+  const headers: HeadersInit = isFormData 
+    ? { ...options.headers }
+    : {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      };
 
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
@@ -196,11 +201,13 @@ export const apiService = {
     }
   },
 
-  async createProduct(data: Omit<Product, 'id' | '_id' | 'slug'>): Promise<Product> {
-    console.log('API createProduct called with:', JSON.stringify(data, null, 2));
+  async createProduct(data: FormData | Omit<Product, 'id' | '_id' | 'slug'>): Promise<Product> {
+    const isFormData = data instanceof FormData;
+    
     const response = await apiRequest<ApiResponse<{ product: Product }>>('/realSilver/products', {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: isFormData ? data : JSON.stringify(data),
+      headers: isFormData ? {} : { 'Content-Type': 'application/json' },
     });
     
     if (!response.data?.product) {
@@ -209,10 +216,13 @@ export const apiService = {
     return response.data.product;
   },
 
-  async updateProduct(id: string, data: Partial<Product>): Promise<Product> {
+  async updateProduct(id: string, data: FormData | Partial<Product>): Promise<Product> {
+    const isFormData = data instanceof FormData;
+    
     const response = await apiRequest<ApiResponse<{ product: Product }>>(`/realSilver/products/${id}`, {
       method: 'PATCH',
-      body: JSON.stringify(data),
+      body: isFormData ? data : JSON.stringify(data),
+      headers: isFormData ? {} : { 'Content-Type': 'application/json' },
     });
     
     if (!response.data?.product) {
