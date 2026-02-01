@@ -5,6 +5,70 @@ import { Product, Collection, Review, Enquiry, HomepageContent } from '../types'
 // Helper to get MongoDB or frontend ID
 const getId = (item: any): string => item._id || item.id;
 
+// Helper to compress images
+const compressImage = async (file: File, maxSizeMB: number = 1): Promise<File> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target?.result as string;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        
+        // Resize if too large (max 1200px width)
+        const MAX_WIDTH = 1200;
+        if (width > MAX_WIDTH) {
+          height = (height * MAX_WIDTH) / width;
+          width = MAX_WIDTH;
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        
+        const ctx = canvas.getContext('2d');
+        ctx?.drawImage(img, 0, 0, width, height);
+        
+        // Start with quality 0.8 and reduce if needed
+        let quality = 0.8;
+        
+        const tryCompress = () => {
+          canvas.toBlob(
+            (blob) => {
+              if (!blob) {
+                reject(new Error('Compression failed'));
+                return;
+              }
+              
+              const sizeMB = blob.size / (1024 * 1024);
+              
+              // If still too large and quality can be reduced, try again
+              if (sizeMB > maxSizeMB && quality > 0.3) {
+                quality -= 0.1;
+                tryCompress();
+              } else {
+                const compressedFile = new File([blob], file.name, {
+                  type: 'image/jpeg',
+                  lastModified: Date.now(),
+                });
+                resolve(compressedFile);
+              }
+            },
+            'image/jpeg',
+            quality
+          );
+        };
+        
+        tryCompress();
+      };
+      img.onerror = reject;
+    };
+    reader.onerror = reject;
+  });
+};
+
 // Login Component
 const AdminLogin: React.FC<{ onLogin: () => void }> = ({ onLogin }) => {
   const [adminKey, setAdminKey] = useState('');
@@ -111,6 +175,23 @@ const ProductsManager: React.FC = () => {
         return;
       }
 
+      // Compress images before uploading
+      let compressedFiles: File[] = [];
+      if (imageFiles.length > 0) {
+        alert('Compressing images, please wait...');
+        try {
+          compressedFiles = await Promise.all(
+            imageFiles.map(file => compressImage(file, 0.3)) // Max 300KB per image
+          );
+          const totalSizeMB = compressedFiles.reduce((sum, f) => sum + f.size, 0) / (1024 * 1024);
+          console.log(`Compressed ${compressedFiles.length} images to ${totalSizeMB.toFixed(2)}MB total`);
+        } catch (compressionError) {
+          console.error('Image compression failed:', compressionError);
+          alert('Failed to compress images. Please try with smaller images.');
+          return;
+        }
+      }
+
       // Create FormData for file upload
       const formDataToSend = new FormData();
       
@@ -137,8 +218,8 @@ const ProductsManager: React.FC = () => {
         });
       }
       
-      // Add image files
-      imageFiles.forEach((file) => {
+      // Add compressed image files
+      compressedFiles.forEach((file) => {
         formDataToSend.append('images', file);
       });
 
@@ -278,7 +359,7 @@ const ProductsManager: React.FC = () => {
             />
             <div className="col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Product Images * (Upload multiple images)
+                Product Images * (Upload multiple images - will be auto-compressed)
               </label>
               <input
                 type="file"
@@ -294,6 +375,8 @@ const ProductsManager: React.FC = () => {
               {imageFiles.length > 0 && (
                 <div className="mt-2 text-sm text-gray-600">
                   {imageFiles.length} file(s) selected: {imageFiles.map(f => f.name).join(', ')}
+                  <br />
+                  <span className="text-xs text-blue-600">Images will be automatically compressed before upload</span>
                 </div>
               )}
               {editingProduct && formData.images && formData.images.length > 0 && imageFiles.length === 0 && (
