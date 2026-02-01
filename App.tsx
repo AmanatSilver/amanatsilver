@@ -17,6 +17,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Loader } from './components/common/Loader';
 import { Navbar } from './components/common/Navbar';
 import { Footer } from './components/common/Footer';
+import ErrorBoundary from './components/common/ErrorBoundary';
 import { useLocomotiveScroll } from './hooks';
 import { CartProvider } from './contexts/CartContext';
 
@@ -39,14 +40,15 @@ const App: React.FC = () => {
   const [appIsReady, setAppIsReady] = useState(false);
 
   return (
-    <Router>
-      <CartProvider>
-        <Loader onComplete={() => setAppIsReady(true)} />
-        <div className={`transition-opacity duration-1000 bg-stone-50 ${appIsReady ? 'opacity-100' : 'opacity-0'}`}>
-          {appIsReady && (
-            <Routes>
-              {/* Admin route - no navbar/footer */}
-              <Route path="/admin" element={<Admin />} />
+    <ErrorBoundary>
+      <Router>
+        <CartProvider>
+          <Loader onComplete={() => setAppIsReady(true)} />
+          <div className={`transition-opacity duration-1000 bg-stone-50 ${appIsReady ? 'opacity-100' : 'opacity-0'}`}>
+            {appIsReady && (
+              <Routes>
+                {/* Admin route - no navbar/footer */}
+                <Route path="/admin" element={<Admin />} />
               
               {/* Public routes - with navbar/footer */}
               <Route
@@ -79,6 +81,7 @@ const App: React.FC = () => {
         </div>
       </CartProvider>
     </Router>
+    </ErrorBoundary>
   );
 };
 

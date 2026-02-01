@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { apiService } from '../services/api';
 import { Product, Collection, Review, Enquiry, HomepageContent } from '../types';
+import { validateProductForm, validateCollectionForm } from '../utils/validation';
 
 // Helper to get MongoDB or frontend ID
 const getId = (item: any): string => item._id || item.id;
@@ -158,20 +159,24 @@ const ProductsManager: React.FC = () => {
 
   const handleSave = async () => {
     try {
-      // Validate required fields
-      if (!formData.name || !formData.collectionId || !formData.description || !formData.careInstructions) {
-        alert('Please fill in all required fields (Name, Collection, Description, Care Instructions)');
+      // Comprehensive validation
+      const validation = validateProductForm({
+        name: formData.name,
+        description: formData.description,
+        careInstructions: formData.careInstructions,
+        price: formData.price,
+        collectionId: formData.collectionId,
+        materials: formData.materials
+      });
+
+      if (!validation.valid) {
+        alert('Validation errors:\n' + validation.errors.join('\n'));
         return;
       }
 
       // For new products, check image files; for updates, either files or existing images
       if (!editingProduct && imageFiles.length === 0) {
         alert('Please upload at least one product image');
-        return;
-      }
-
-      if (!formData.price || formData.price <= 0) {
-        alert('Please provide a valid price');
         return;
       }
 
@@ -457,7 +462,7 @@ const ProductsManager: React.FC = () => {
             {products.map((product) => (
               <tr key={getId(product)}>
                 <td className="px-6 py-4 whitespace-nowrap">{product.name}</td>
-                <td className="px-6 py-4 whitespace-nowrap">${product.price}</td>
+                <td className="px-6 py-4 whitespace-nowrap">₹{product.price}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   {collections.find((c) => getId(c) === product.collectionId)?.name || 'N/A'}
                 </td>
@@ -512,9 +517,15 @@ const CollectionsManager: React.FC = () => {
 
   const handleSave = async () => {
     try {
-      // Validate required fields
-      if (!formData.name || !formData.description || !formData.heroImage) {
-        alert('Please fill in all required fields (Name, Description, Hero Image)');
+      // Comprehensive validation
+      const validation = validateCollectionForm({
+        name: formData.name,
+        description: formData.description,
+        heroImage: formData.heroImage
+      });
+
+      if (!validation.valid) {
+        alert('Validation errors:\n' + validation.errors.join('\n'));
         return;
       }
 
@@ -919,127 +930,11 @@ const EnquiriesManager: React.FC = () => {
   );
 };
 
-// Homepage Manager
-const HomepageManager: React.FC = () => {
-  const [homepage, setHomepage] = useState<HomepageContent | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState<Partial<HomepageContent>>({});
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const data = await apiService.getHomepage();
-      setHomepage(data);
-      setFormData(data);
-    } catch (error) {
-      console.error('Failed to fetch homepage:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSave = async () => {
-    try {
-      // Since homepage content is hardcoded in config.ts, store in localStorage for admin preview
-      localStorage.setItem('homepage_override', JSON.stringify(formData));
-      setHomepage(formData as HomepageContent);
-      alert('Homepage content updated in local preview. Note: To permanently change homepage content, update the HOMEPAGE_CONTENT constant in config.ts file.');
-    } catch (error) {
-      console.error('Failed to update homepage:', error);
-      alert('Failed to update homepage');
-    }
-  };
-
-  if (loading) return <div className="p-4">Loading homepage...</div>;
-
-  return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-6">Homepage Content</h2>
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Hero Title</label>
-            <input
-              type="text"
-              value={formData.heroTitle || ''}
-              onChange={(e) => setFormData({ ...formData, heroTitle: e.target.value })}
-              className="w-full px-3 py-2 border rounded-md"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Hero Subtitle</label>
-            <input
-              type="text"
-              value={formData.heroSubtitle || ''}
-              onChange={(e) => setFormData({ ...formData, heroSubtitle: e.target.value })}
-              className="w-full px-3 py-2 border rounded-md"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Hero Image URL</label>
-            <input
-              type="text"
-              value={formData.heroImage || ''}
-              onChange={(e) => setFormData({ ...formData, heroImage: e.target.value })}
-              className="w-full px-3 py-2 border rounded-md"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Brand Story</label>
-            <textarea
-              value={formData.brandStoryShort || ''}
-              onChange={(e) => setFormData({ ...formData, brandStoryShort: e.target.value })}
-              className="w-full px-3 py-2 border rounded-md"
-              rows={4}
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Craftsmanship Title</label>
-            <input
-              type="text"
-              value={formData.craftsmanshipTitle || ''}
-              onChange={(e) => setFormData({ ...formData, craftsmanshipTitle: e.target.value })}
-              className="w-full px-3 py-2 border rounded-md"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Craftsmanship Description</label>
-            <textarea
-              value={formData.craftsmanshipDescription || ''}
-              onChange={(e) => setFormData({ ...formData, craftsmanshipDescription: e.target.value })}
-              className="w-full px-3 py-2 border rounded-md"
-              rows={4}
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Craftsmanship Image URL</label>
-            <input
-              type="text"
-              value={formData.craftsmanshipImage || ''}
-              onChange={(e) => setFormData({ ...formData, craftsmanshipImage: e.target.value })}
-              className="w-full px-3 py-2 border rounded-md"
-            />
-          </div>
-        </div>
-        <button
-          onClick={handleSave}
-          className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md"
-        >
-          Save Changes
-        </button>
-      </div>
-    </div>
-  );
-};
 
 // Main Admin Component
 const Admin: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(apiService.isAuthenticated());
-  const [activeTab, setActiveTab] = useState<'products' | 'collections' | 'reviews' | 'enquiries' | 'homepage'>('products');
+  const [activeTab, setActiveTab] = useState<'products' | 'collections' | 'reviews' | 'enquiries'>('products');
 
   const handleLogout = () => {
     apiService.logout();
@@ -1107,16 +1002,6 @@ const Admin: React.FC = () => {
             >
               Enquiries
             </button>
-            <button
-              onClick={() => setActiveTab('homepage')}
-              className={`px-6 py-3 font-medium ${
-                activeTab === 'homepage'
-                  ? 'border-b-2 border-blue-600 text-blue-600'
-                  : 'text-gray-600 hover:text-gray-800'
-              }`}
-            >
-              Homepage
-            </button>
           </div>
         </div>
 
@@ -1124,7 +1009,6 @@ const Admin: React.FC = () => {
         {activeTab === 'collections' && <CollectionsManager />}
         {activeTab === 'reviews' && <ReviewsManager />}
         {activeTab === 'enquiries' && <EnquiriesManager />}
-        {activeTab === 'homepage' && <HomepageManager />}
       </div>
     </div>
   );

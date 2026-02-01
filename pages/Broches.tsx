@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { apiService } from '../services/api';
 import { Product } from '../types';
+import { ProductGridSkeleton } from '../components/common/LoadingSpinner';
+import { EmptyState } from '../components/common/EmptyState';
 
 const Broches: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -26,14 +28,6 @@ const Broches: React.FC = () => {
     fetchData();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="h-screen w-full flex items-center justify-center bg-stone-50">
-        <div className="text-[10px] uppercase tracking-[0.4em] animate-pulse">Loading...</div>
-      </div>
-    );
-  }
-
   return (
     <div className="pt-40 pb-32 bg-stone-50 min-h-screen" data-scroll-section>
       <div className="container mx-auto px-6">
@@ -44,8 +38,18 @@ const Broches: React.FC = () => {
           </p>
         </header>
 
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-x-6 md:gap-x-12 gap-y-12 md:gap-y-20" data-scroll data-scroll-speed="0.3">
-          {products.map((product, idx) => (
+        {loading ? (
+          <ProductGridSkeleton count={6} />
+        ) : products.length === 0 ? (
+          <EmptyState 
+            title="No Broches Available"
+            message="We're currently crafting new pieces. Check back soon!"
+            actionLabel="View Jewelry Collection"
+            onAction={() => window.location.href = '#/collections'}
+          />
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-x-6 md:gap-x-12 gap-y-12 md:gap-y-20" data-scroll data-scroll-speed="0.3">
+            {products.map((product, idx) => (
             <Link 
               key={product.id} 
               to={`/product/${product.slug}`} 
@@ -71,11 +75,6 @@ const Broches: React.FC = () => {
               </div>
             </Link>
           ))}
-        </div>
-
-        {products.length === 0 && (
-          <div className="text-center py-20">
-            <p className="text-stone-400">No broches available at the moment.</p>
           </div>
         )}
       </div>

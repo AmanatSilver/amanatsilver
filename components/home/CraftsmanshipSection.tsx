@@ -20,8 +20,8 @@ export const CraftsmanshipSection: React.FC<CraftsmanshipSectionProps> = ({
             <img src={craftsmanshipImage} alt="Craftsmanship" className="w-full h-full object-cover object-center opacity-50 transition-transform duration-[3s] hover:scale-110" />
           </div>
           <div className="absolute -bottom-20 -right-20 w-3/4 aspect-square bg-stone-50 p-20 hidden lg:flex flex-col justify-center" data-scroll data-scroll-speed="0.8">
-            <h4 className="text-stone-900 text-4xl serif italic mb-10">Artisan Integrity</h4>
-            <p className="text-stone-500 text-base font-light leading-relaxed">Every silhouette is a result of a dialogue between precision and poetic form, born from raw recycled silver and refined by human touch in our London atelier.</p>
+            <h4 className="text-stone-900 text-4xl serif italic mb-10">Crafted with Integrity</h4>
+            <p className="text-stone-500 text-base font-light leading-relaxed">Every silhouette is a result of a dialogue between precision and poetic form, born from raw recycled silver and refined by human touch.</p>
           </div>
         </div>
         <div className="max-w-2xl">

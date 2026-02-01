@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { apiService } from '../services/api';
+import { canSubmitForm, recordSubmission, getRemainingTime } from '../utils/rateLimit';
+import { validateEmail, validateName, validateMessage } from '../utils/validation';
 
 const Contact: React.FC = () => {
   const location = useLocation();
@@ -12,19 +14,48 @@ const Contact: React.FC = () => {
     email: '',
     message: initialProduct ? `I am interested in the ${initialProduct}.` : ''
   });
-  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error' | 'rate-limited'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMessage('');
+
+    // Rate limiting check
+    if (!canSubmitForm()) {
+      const remainingSeconds = getRemainingTime();
+      setStatus('rate-limited');
+      setErrorMessage(`Please wait ${remainingSeconds} seconds before submitting again.`);
+      return;
+    }
+
+    // Validation
+    if (!validateName(formData.name)) {
+      setErrorMessage('Please enter a valid name (2-100 characters)');
+      return;
+    }
+
+    if (!validateEmail(formData.email)) {
+      setErrorMessage('Please enter a valid email address');
+      return;
+    }
+
+    if (!validateMessage(formData.message)) {
+      setErrorMessage('Message must be between 10 and 2000 characters');
+      return;
+    }
+
     setStatus('submitting');
     try {
       const response = await apiService.submitEnquiry(formData);
       if (response.success) {
+        recordSubmission();
         setStatus('success');
         setFormData({ name: '', email: '', message: '' });
       }
     } catch (err) {
       setStatus('error');
+      setErrorMessage('Failed to submit enquiry. Please try again.');
     }
   };
 
@@ -36,23 +67,15 @@ const Contact: React.FC = () => {
           <div data-scroll data-scroll-speed="0.5">
             <h1 className="text-6xl font-light mb-12 serif tracking-tight gsap-fade-up">Initiate a Conversation</h1>
             <p className="text-stone-500 font-light leading-relaxed text-lg mb-12 gsap-fade-up">
-              Our pieces are often bespoke or produced in limited editions. Please use the form to enquire about availability, private commissions, or to schedule an appointment at our Indian atelier.
+              Our pieces are often bespoke or produced in limited editions. Please use the form to enquire about availability or private commissions.
             </p>
             
             <div className="space-y-12 gsap-fade-up">
               <div>
-                <h4 className="text-[10px] uppercase tracking-[0.4em] text-stone-400 mb-4">Location</h4>
-                <p className="text-sm font-light leading-loose">
-                  14 Albemarle Street<br/>
-                  Mayfair, London<br/>
-                  W1S 4PH
-                </p>
-              </div>
-              <div>
                 <h4 className="text-[10px] uppercase tracking-[0.4em] text-stone-400 mb-4">Contact</h4>
                 <p className="text-sm font-light leading-loose">
-                  atelier@amanatsilver.com<br/>
-                  +44 (0) 20 7946 0123
+                  amanatyoursilveratelier@gmail.com<br/>
+                  +91 8886020800
                 </p>
               </div>
             </div>
@@ -111,12 +134,13 @@ const Contact: React.FC = () => {
 
                 <button 
                   type="submit" 
-                  disabled={status === 'submitting'}
-                  className="w-full bg-stone-900 text-white py-6 text-[10px] uppercase tracking-[0.5em] hover:bg-stone-800 transition-colors disabled:opacity-50"
+                  disabled={status === 'submitting' || status === 'rate-limited'}
+                  className="w-full bg-stone-900 text-white py-6 text-[10px] uppercase tracking-[0.5em] hover:bg-stone-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {status === 'submitting' ? 'Processing...' : 'Submit Enquiry'}
+                  {status === 'submitting' ? 'Processing...' : status === 'rate-limited' ? 'Please Wait...' : 'Submit Enquiry'}
                 </button>
-                {status === 'error' && <p className="text-red-500 text-[10px] uppercase text-center">Something went wrong. Please try again.</p>}
+                {errorMessage && <p className="text-red-500 text-[10px] uppercase text-center">{errorMessage}</p>}
+                {status === 'error' && !errorMessage && <p className="text-red-500 text-[10px] uppercase text-center">Something went wrong. Please try again.</p>}
               </form>
             )}
           </div>

@@ -10,6 +10,6 @@ export const HOMEPAGE_CONTENT = {
   heroImage: '/images/hero-main.jpg',
   brandStoryShort: 'Founded in 2024 on the principle that jewellery is a silent dialogue between the artist and the wearer, Amanat creates timeless silver pieces that transcend seasons.',
   craftsmanshipTitle: 'Where Silver Tells Stories',
-  craftsmanshipDescription: "Amanat was founded in 2024 in India with a singular vision: to create silver jewellery that transcends the ephemeral nature of fashion and becomes a permanent part of your story.\nOur Indian atelier is where tradition meets innovation. Each piece is handcrafted by master artisans using only recycled 925 sterling silver, ensuring that luxury and sustainability go hand in hand.\n We believe jewellery is more than adornment—it's a dialogue between the maker and the wearer, a silent language of form and craftsmanship that speaks across generations.",
+  craftsmanshipDescription: "Amanat was founded in 2024 in India with a singular vision: to create silver jewellery that transcends the ephemeral nature of fashion and becomes a permanent part of your story.\nEach piece is handcrafted using only recycled 925 sterling silver, ensuring that luxury and sustainability go hand in hand.\n We believe jewellery is more than adornment—it's a dialogue between the maker and the wearer, a silent language of form and craftsmanship that speaks across generations.",
   craftsmanshipImage: '/images/craftsmanship.jpg'
 };

@@ -23,7 +23,7 @@ const About: React.FC = () => {
               In a world of mass production, we choose the path of resistance. Each piece we create is an investigation into the properties of 925 sterling silver—its weight, its warmth, and its remarkable ability to hold a story.
             </p>
             <p className="text-stone-500 font-light leading-relaxed text-lg">
-              Our Indian atelier is a sanctuary of focus. We sculpt interfaces between the body and the environment.
+              We sculpt interfaces between the body and the environment, creating pieces that transcend time and trend.
             </p>
             <div className="pt-12">
               <div className="w-16 h-[1px] bg-stone-900 mb-8"></div>

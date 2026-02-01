@@ -10,6 +10,62 @@ interface ApiResponse<T> {
   message?: string;
 }
 
+// Cache configuration
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+const cache = new Map<string, { data: any; timestamp: number }>();
+
+const getCachedData = <T>(key: string): T | null => {
+  const cached = cache.get(key);
+  if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+    return cached.data as T;
+  }
+  cache.delete(key);
+  return null;
+};
+
+const setCachedData = <T>(key: string, data: T): void => {
+  cache.set(key, { data, timestamp: Date.now() });
+};
+
+const clearCache = (pattern?: string): void => {
+  if (pattern) {
+    Array.from(cache.keys()).forEach(key => {
+      if (key.includes(pattern)) cache.delete(key);
+    });
+  } else {
+    cache.clear();
+  }
+};
+
+// Retry configuration
+const MAX_RETRIES = 3;
+const RETRY_DELAY = 1000;
+
+const fetchWithRetry = async (
+  url: string, 
+  options: RequestInit = {}, 
+  retries = MAX_RETRIES
+): Promise<Response> => {
+  try {
+    const response = await fetch(url, options);
+    
+    // Retry on server errors (5xx) if retries remaining
+    if (!response.ok && retries > 0 && response.status >= 500) {
+      await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
+      return fetchWithRetry(url, options, retries - 1);
+    }
+    
+    return response;
+  } catch (error) {
+    // Retry on network errors if retries remaining
+    if (retries > 0) {
+      await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
+      return fetchWithRetry(url, options, retries - 1);
+    }
+    throw error;
+  }
+};
+
 // Helper to get auth token
 const getAuthToken = (): string | null => {
   return localStorage.getItem('adminToken');
@@ -39,7 +95,7 @@ const apiRequest = async <T>(
   const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT);
 
   try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    const response = await fetchWithRetry(`${API_BASE_URL}${endpoint}`, {
       ...options,
       headers,
       signal: controller.signal,
@@ -123,8 +179,14 @@ export const apiService = {
 
   // ============ Collections ============
   async getCollections(): Promise<Collection[]> {
+    const cacheKey = 'collections';
+    const cached = getCachedData<Collection[]>(cacheKey);
+    if (cached) return cached;
+
     const response = await apiRequest<ApiResponse<{ collections: Collection[] }>>('/collections');
-    return response.data?.collections || [];
+    const data = response.data?.collections || [];
+    setCachedData(cacheKey, data);
+    return data;
   },
 
   async getCollectionBySlug(slug: string): Promise<Collection | undefined> {
@@ -146,6 +208,7 @@ export const apiService = {
     if (!response.data?.collection) {
       throw new Error('Failed to create collection');
     }
+    clearCache('collections');
     return response.data.collection;
   },
 
@@ -158,6 +221,7 @@ export const apiService = {
     if (!response.data?.collection) {
       throw new Error('Failed to update collection');
     }
+    clearCache('collections');
     return response.data.collection;
   },
 
@@ -165,17 +229,24 @@ export const apiService = {
     await apiRequest(`/realSilver/collections/${id}`, {
       method: 'DELETE',
     });
+    clearCache('collections');
   },
 
   // ============ Products ============
   async getProducts(collectionId?: string): Promise<Product[]> {
+    const cacheKey = collectionId ? `products_${collectionId}` : 'products';
+    const cached = getCachedData<Product[]>(cacheKey);
+    if (cached) return cached;
+
     const response = await apiRequest<ApiResponse<{ products: Product[] }>>('/products');
     const products = response.data?.products || [];
     
-    if (collectionId) {
-      return products.filter((p: Product) => p.collectionId === collectionId);
-    }
-    return products;
+    const result = collectionId 
+      ? products.filter((p: Product) => p.collectionId === collectionId)
+      : products;
+    
+    setCachedData(cacheKey, result);
+    return result;
   },
 
   async getProductBySlug(slug: string): Promise<Product | undefined> {
@@ -213,6 +284,7 @@ export const apiService = {
     if (!response.data?.product) {
       throw new Error('Failed to create product');
     }
+    clearCache('products');
     return response.data.product;
   },
 
@@ -228,6 +300,7 @@ export const apiService = {
     if (!response.data?.product) {
       throw new Error('Failed to update product');
     }
+    clearCache('products');
     return response.data.product;
   },
 
@@ -235,6 +308,7 @@ export const apiService = {
     await apiRequest(`/realSilver/products/${id}`, {
       method: 'DELETE',
     });
+    clearCache('products');
   },
 
   // ============ Reviews ============
