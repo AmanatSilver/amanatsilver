@@ -40,16 +40,57 @@ const ProductDetail: React.FC = () => {
 
           // Find similar products based on matching tags
           const allProducts = await apiService.getProducts();
+          
+          // Ensure tags is always an array
+          const currentTags = Array.isArray(p.tags) ? p.tags : [];
+          
+          // Debug: Log current product details
+          console.log('=== SIMILAR PRODUCTS DEBUG ===');
+          console.log('Current product:', p.name);
+          console.log('Current product ID:', p.id);
+          console.log('Current product tags:', currentTags);
+          console.log('Current product full object:', p);
+          console.log('Total products in database:', allProducts.length);
+          
+          // Debug: Log all products with their tags
+          console.log('All products with tags:');
+          allProducts.forEach(prod => {
+            const prodTags = Array.isArray(prod.tags) ? prod.tags : [];
+            console.log(`  - ${prod.name} (${prod.id}):`, prodTags);
+          });
+          
           const similar = allProducts
-            .filter(prod => prod.id !== p.id) // Exclude current product
-            .map(prod => ({
-              product: prod,
-              matchCount: prod.tags.filter(tag => p.tags.includes(tag)).length
-            }))
+            .filter(prod => {
+              // Compare both id and _id to handle MongoDB documents
+              const currentProductId = p.id || p._id;
+              const prodId = prod.id || prod._id;
+              return prodId !== currentProductId;
+            })
+            .map(prod => {
+              const prodTags = Array.isArray(prod.tags) ? prod.tags : [];
+              const matchCount = prodTags.filter(tag => currentTags.includes(tag)).length;
+              return {
+                product: prod,
+                matchCount,
+                prodTags
+              };
+            })
             .filter(({ matchCount }) => matchCount > 0) // Only products with at least 1 matching tag
             .sort((a, b) => b.matchCount - a.matchCount) // Sort by most matches first
             .slice(0, 3) // Get top 3
             .map(({ product }) => product);
+          
+          // Debug: Log similar products results
+          console.log('Similar products found:', similar.length);
+          console.log('Similar products details:', similar.map(sp => {
+            const spTags = Array.isArray(sp.tags) ? sp.tags : [];
+            return {
+              name: sp.name,
+              tags: spTags,
+              matchingTags: spTags.filter(tag => currentTags.includes(tag))
+            };
+          }));
+          console.log('=== END DEBUG ===');
           
           setSimilarProducts(similar);
         }
@@ -157,7 +198,10 @@ const ProductDetail: React.FC = () => {
         </div>
 
         {/* Similar Products Section */}
-        {similarProducts.length > 0 && (
+        {(() => {
+          console.log('Rendering similar products section. Count:', similarProducts.length);
+          return similarProducts.length > 0;
+        })() && (
           <div className="container mx-auto px-6 mt-32 pb-20">
             <div className="border-t border-stone-200 pt-20">
               <h2 className="text-3xl md:text-4xl font-light serif mb-12 text-center">See Similar</h2>
