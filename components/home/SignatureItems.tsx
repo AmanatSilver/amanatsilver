@@ -88,7 +88,7 @@ export const SignatureItems: React.FC<SignatureItemsProps> = ({ featured }) => {
 
                 <div className="pt-6 border-t border-stone-800">
                   <p className="text-xs text-stone-500 leading-relaxed">
-                    Handcrafted in our Indian atelier • Limited availability
+                    Handcrafted with care • Limited availability
                   </p>
                 </div>
               </div>

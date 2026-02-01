@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { apiService } from '../services/api';
 import { Product, Collection } from '../types';
+import { ProductGridSkeleton } from '../components/common/LoadingSpinner';
+import { EmptyState } from '../components/common/EmptyState';
 
 const Collections: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -81,8 +83,18 @@ const Collections: React.FC = () => {
           </div>
         </header>
 
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-x-6 md:gap-x-12 gap-y-12 md:gap-y-20" data-scroll data-scroll-speed="0.3">
-          {filteredProducts.map((product, idx) => (
+        {loading ? (
+          <ProductGridSkeleton count={6} />
+        ) : filteredProducts.length === 0 ? (
+          <EmptyState 
+            title="No Products Found"
+            message="There are no products in this collection yet. Check back soon!"
+            actionLabel="View All Collections"
+            onAction={() => setActiveFilter('')}
+          />
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-x-6 md:gap-x-12 gap-y-12 md:gap-y-20" data-scroll data-scroll-speed="0.3">
+            {filteredProducts.map((product, idx) => (
             <Link 
               key={product._id || product.id} 
               to={`/product/${product.slug}`} 
@@ -119,7 +131,8 @@ const Collections: React.FC = () => {
               </div>
             </Link>
           ))}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

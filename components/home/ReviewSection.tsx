@@ -119,7 +119,7 @@ export const ReviewSection: React.FC<ReviewSectionProps> = ({ reviews, monthlyIm
                 Amanat was founded in 2024 in India with a singular vision: to create silver jewellery that transcends the ephemeral nature of fashion and becomes a permanent part of your story.
               </p>
               <p>
-                Our Indian atelier is where tradition meets innovation. Each piece is handcrafted by master artisans using only recycled 925 sterling silver, ensuring that luxury and sustainability go hand in hand.
+                Each piece is handcrafted using only recycled 925 sterling silver, ensuring that luxury and sustainability go hand in hand.
               </p>
               <p>
                 We believe jewellery is more than adornment—it's a dialogue between the maker and the wearer, a silent language of form and craftsmanship that speaks across generations.
