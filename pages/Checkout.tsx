@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
+import { apiService } from '../services/api';
+
+// WhatsApp Business Number
+const WHATSAPP_BUSINESS_NUMBER = '+918886020800';
 
 const Checkout: React.FC = () => {
   const { cart, getCartItemsCount, clearCart } = useCart();
@@ -22,11 +26,60 @@ const Checkout: React.FC = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert('Thank you for your order! We will contact you shortly to discuss your bespoke pieces and finalize the details.');
-    clearCart();
-    window.location.href = '#/';
+    
+    try {
+      // Prepare customer info
+      const customerName = `${formData.firstName} ${formData.lastName}`;
+      const customerEmail = formData.email;
+      
+      // Create product enquiries for each cart item
+      const enquiryPromises = cart.map(item => {
+        const message = `Purchase Enquiry:\n\nCustomer: ${customerName}\nEmail: ${customerEmail}\nPhone: ${formData.phone}\n\nProduct: ${item.product.name}\nQuantity: ${item.quantity}\n\nShipping Address:\n${formData.address}\n${formData.city}, ${formData.postalCode}\n${formData.country}`;
+        
+        return apiService.submitProductEnquiry({
+          name: customerName,
+          email: customerEmail,
+          message: message,
+          productId: item.product._id || item.product.id || '',
+        });
+      });
+      
+      // Wait for all enquiries to be saved
+      await Promise.all(enquiryPromises);
+      
+      // Create WhatsApp message with all products
+      let whatsappMessage = `*New Order Request*\n\n`;
+      whatsappMessage += `*Customer Details:*\n`;
+      whatsappMessage += `Name: ${customerName}\n`;
+      whatsappMessage += `Email: ${customerEmail}\n`;
+      whatsappMessage += `Phone: ${formData.phone}\n\n`;
+      
+      whatsappMessage += `*Products:*\n`;
+      cart.forEach((item, index) => {
+        whatsappMessage += `${index + 1}. ${item.product.name} (Qty: ${item.quantity})\n`;
+      });
+      
+      whatsappMessage += `\n*Shipping Address:*\n`;
+      whatsappMessage += `${formData.address}\n`;
+      whatsappMessage += `${formData.city}, ${formData.postalCode}\n`;
+      whatsappMessage += `${formData.country}\n\n`;
+      whatsappMessage += `_Sent via Amanat Silver Website_`;
+      
+      // Open WhatsApp with pre-filled message
+      const encodedMessage = encodeURIComponent(whatsappMessage);
+      const whatsappUrl = `https://wa.me/${WHATSAPP_BUSINESS_NUMBER.replace(/[^0-9]/g, '')}?text=${encodedMessage}`;
+      window.open(whatsappUrl, '_blank');
+      
+      // Clear cart and redirect
+      clearCart();
+      alert('Thank you for your order! Your enquiry has been submitted. Please complete your order by sending the WhatsApp message.');
+      window.location.href = '#/';
+    } catch (error) {
+      console.error('Error submitting order:', error);
+      alert('There was an error submitting your order. Please try again or contact us directly.');
+    }
   };
 
   if (cart.length === 0) {

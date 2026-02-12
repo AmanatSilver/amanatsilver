@@ -2,6 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 
+// Helper to get product ID (handles both MongoDB _id and frontend id)
+const getProductId = (product: any): string => {
+  return product._id || product.id || '';
+};
+
 const Cart: React.FC = () => {
   const { cart, removeFromCart, updateQuantity, getCartItemsCount } = useCart();
 
@@ -33,9 +38,11 @@ const Cart: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             {/* Cart Items */}
             <div className="lg:col-span-2 space-y-8">
-              {cart.map((item) => (
+              {cart.map((item) => {
+                const productId = getProductId(item.product);
+                return (
                 <div 
-                  key={item.product.id} 
+                  key={productId} 
                   className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow"
                 >
                   <div className="grid grid-cols-12 gap-6 p-6">
@@ -73,7 +80,7 @@ const Cart: React.FC = () => {
                           <span className="text-xs uppercase tracking-wider text-stone-400">Quantity</span>
                           <div className="flex items-center gap-3">
                             <button
-                              onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                              onClick={() => updateQuantity(productId, item.quantity - 1)}
                               className="w-8 h-8 flex items-center justify-center border border-stone-200 rounded-full hover:bg-stone-100 transition-colors"
                               aria-label="Decrease quantity"
                             >
@@ -81,7 +88,7 @@ const Cart: React.FC = () => {
                             </button>
                             <span className="w-8 text-center font-light">{item.quantity}</span>
                             <button
-                              onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                              onClick={() => updateQuantity(productId, item.quantity + 1)}
                               className="w-8 h-8 flex items-center justify-center border border-stone-200 rounded-full hover:bg-stone-100 transition-colors"
                               aria-label="Increase quantity"
                             >
@@ -91,7 +98,7 @@ const Cart: React.FC = () => {
                         </div>
 
                         <button
-                          onClick={() => removeFromCart(item.product.id)}
+                          onClick={() => removeFromCart(productId)}
                           className="text-xs uppercase tracking-wider text-stone-400 hover:text-red-600 transition-colors"
                         >
                           Remove
@@ -100,7 +107,8 @@ const Cart: React.FC = () => {
                     </div>
                   </div>
                 </div>
-              ))}
+              );
+              })}
             </div>
 
             {/* Cart Summary */}

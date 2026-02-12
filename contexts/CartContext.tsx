@@ -18,6 +18,11 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
+// Helper to get product ID (handles both MongoDB _id and frontend id)
+const getProductId = (product: Product): string => {
+  return product._id || product.id || '';
+};
+
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
 
@@ -40,10 +45,11 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const addToCart = (product: Product) => {
     setCart((prevCart) => {
-      const existingItem = prevCart.find((item) => item.product.id === product.id);
+      const productId = getProductId(product);
+      const existingItem = prevCart.find((item) => getProductId(item.product) === productId);
       if (existingItem) {
         return prevCart.map((item) =>
-          item.product.id === product.id
+          getProductId(item.product) === productId
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
@@ -53,7 +59,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const removeFromCart = (productId: string) => {
-    setCart((prevCart) => prevCart.filter((item) => item.product.id !== productId));
+    setCart((prevCart) => prevCart.filter((item) => getProductId(item.product) !== productId));
   };
 
   const updateQuantity = (productId: string, quantity: number) => {
@@ -63,7 +69,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
     setCart((prevCart) =>
       prevCart.map((item) =>
-        item.product.id === productId ? { ...item, quantity } : item
+        getProductId(item.product) === productId ? { ...item, quantity } : item
       )
     );
   };
