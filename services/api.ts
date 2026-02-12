@@ -367,4 +367,25 @@ export const apiService = {
       method: 'DELETE',
     });
   },
+
+  // ============ Product Enquiries ============
+  async getProductEnquiries(): Promise<any[]> {
+    const response = await apiRequest<ApiResponse<{ productEnquiries: any[] }>>('/realSilver/product-enquiries');
+    return response.data?.productEnquiries || [];
+  },
+
+  async submitProductEnquiry(enquiry: { name: string; email: string; message: string; productId: string }): Promise<{ success: boolean }> {
+    const response = await apiRequest<ApiResponse<{ productEnquiry: any }>>('/product-enquiries', {
+      method: 'POST',
+      body: JSON.stringify(enquiry),
+    });
+    
+    return { success: !!response.success };
+  },
+
+  async deleteProductEnquiry(id: string): Promise<void> {
+    await apiRequest(`/realSilver/product-enquiries/${id}`, {
+      method: 'DELETE',
+    });
+  },
 };

@@ -868,8 +868,8 @@ const ReviewsManager: React.FC = () => {
   );
 };
 
-// Enquiries Manager
-const EnquiriesManager: React.FC = () => {
+// General Enquiries Manager
+const GeneralEnquiriesManager: React.FC = () => {
   const [enquiries, setEnquiries] = useState<Enquiry[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -901,31 +901,106 @@ const EnquiriesManager: React.FC = () => {
     }
   };
 
-  if (loading) return <div className="p-4">Loading enquiries...</div>;
+  if (loading) return <div className="p-4">Loading general enquiries...</div>;
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold mb-6">Enquiries</h2>
-      <div className="grid gap-4">
-        {enquiries.map((enquiry) => (
-          <div key={getId(enquiry)} className="bg-white p-4 rounded-lg shadow-md">
-            <div className="flex justify-between items-start mb-2">
-              <div>
-                <h3 className="text-lg font-semibold">{enquiry.name}</h3>
-                <p className="text-gray-600 text-sm">{enquiry.email}</p>
-                <p className="text-gray-500 text-xs">{new Date(enquiry.createdAt).toLocaleString()}</p>
+      <h2 className="text-2xl font-bold mb-6">General Enquiries</h2>
+      {enquiries.length === 0 ? (
+        <div className="text-center py-12 text-gray-500">No general enquiries yet.</div>
+      ) : (
+        <div className="grid gap-4">
+          {enquiries.map((enquiry) => (
+            <div key={getId(enquiry)} className="bg-white p-4 rounded-lg shadow-md">
+              <div className="flex justify-between items-start mb-2">
+                <div>
+                  <h3 className="text-lg font-semibold">{enquiry.name}</h3>
+                  <p className="text-gray-600 text-sm">{enquiry.email}</p>
+                  <p className="text-gray-500 text-xs">{new Date(enquiry.createdAt).toLocaleString()}</p>
+                </div>
+                <button
+                  onClick={() => handleDelete(enquiry)}
+                  className="text-red-600 hover:text-red-800"
+                >
+                  Delete
+                </button>
               </div>
-              <button
-                onClick={() => handleDelete(enquiry)}
-                className="text-red-600 hover:text-red-800"
-              >
-                Delete
-              </button>
+              <p className="text-gray-700">{enquiry.message}</p>
             </div>
-            <p className="text-gray-700">{enquiry.message}</p>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Product Enquiries Manager
+const ProductEnquiriesManager: React.FC = () => {
+  const [productEnquiries, setProductEnquiries] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const data = await apiService.getProductEnquiries();
+      setProductEnquiries(data);
+    } catch (error) {
+      console.error('Failed to fetch product enquiries:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (enquiry: any) => {
+    if (confirm(`Delete product enquiry from ${enquiry.name}?`)) {
+      try {
+        await apiService.deleteProductEnquiry(getId(enquiry));
+        fetchData();
+      } catch (error) {
+        console.error('Failed to delete product enquiry:', error);
+        alert('Failed to delete product enquiry');
+      }
+    }
+  };
+
+  if (loading) return <div className="p-4">Loading product enquiries...</div>;
+
+  return (
+    <div className="p-6">
+      <h2 className="text-2xl font-bold mb-6">Product Purchase Enquiries</h2>
+      {productEnquiries.length === 0 ? (
+        <div className="text-center py-12 text-gray-500">No product enquiries yet.</div>
+      ) : (
+        <div className="grid gap-4">
+          {productEnquiries.map((enquiry) => (
+            <div key={getId(enquiry)} className="bg-white p-4 rounded-lg shadow-md">
+              <div className="flex justify-between items-start mb-2">
+                <div>
+                  <h3 className="text-lg font-semibold">{enquiry.name}</h3>
+                  <p className="text-gray-600 text-sm">{enquiry.email}</p>
+                  <p className="text-gray-500 text-xs">{new Date(enquiry.createdAt).toLocaleString()}</p>
+                  {enquiry.productId && typeof enquiry.productId === 'object' && (
+                    <p className="text-blue-600 text-sm mt-1">
+                      Product: {enquiry.productId.name || 'Unknown'}
+                    </p>
+                  )}
+                </div>
+                <button
+                  onClick={() => handleDelete(enquiry)}
+                  className="text-red-600 hover:text-red-800"
+                >
+                  Delete
+                </button>
+              </div>
+              <p className="text-gray-700 whitespace-pre-line">{enquiry.message}</p>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
@@ -934,7 +1009,7 @@ const EnquiriesManager: React.FC = () => {
 // Main Admin Component
 const Admin: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(apiService.isAuthenticated());
-  const [activeTab, setActiveTab] = useState<'products' | 'collections' | 'reviews' | 'enquiries'>('products');
+  const [activeTab, setActiveTab] = useState<'products' | 'collections' | 'reviews' | 'general-enquiries' | 'product-enquiries'>('products');
 
   const handleLogout = () => {
     apiService.logout();
@@ -961,10 +1036,10 @@ const Admin: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 py-6">
         <div className="bg-white rounded-lg shadow-md mb-6">
-          <div className="flex border-b">
+          <div className="flex border-b overflow-x-auto">
             <button
               onClick={() => setActiveTab('products')}
-              className={`px-6 py-3 font-medium ${
+              className={`px-6 py-3 font-medium whitespace-nowrap ${
                 activeTab === 'products'
                   ? 'border-b-2 border-blue-600 text-blue-600'
                   : 'text-gray-600 hover:text-gray-800'
@@ -974,7 +1049,7 @@ const Admin: React.FC = () => {
             </button>
             <button
               onClick={() => setActiveTab('collections')}
-              className={`px-6 py-3 font-medium ${
+              className={`px-6 py-3 font-medium whitespace-nowrap ${
                 activeTab === 'collections'
                   ? 'border-b-2 border-blue-600 text-blue-600'
                   : 'text-gray-600 hover:text-gray-800'
@@ -984,7 +1059,7 @@ const Admin: React.FC = () => {
             </button>
             <button
               onClick={() => setActiveTab('reviews')}
-              className={`px-6 py-3 font-medium ${
+              className={`px-6 py-3 font-medium whitespace-nowrap ${
                 activeTab === 'reviews'
                   ? 'border-b-2 border-blue-600 text-blue-600'
                   : 'text-gray-600 hover:text-gray-800'
@@ -993,14 +1068,24 @@ const Admin: React.FC = () => {
               Reviews
             </button>
             <button
-              onClick={() => setActiveTab('enquiries')}
-              className={`px-6 py-3 font-medium ${
-                activeTab === 'enquiries'
+              onClick={() => setActiveTab('general-enquiries')}
+              className={`px-6 py-3 font-medium whitespace-nowrap ${
+                activeTab === 'general-enquiries'
                   ? 'border-b-2 border-blue-600 text-blue-600'
                   : 'text-gray-600 hover:text-gray-800'
               }`}
             >
-              Enquiries
+              General Enquiries
+            </button>
+            <button
+              onClick={() => setActiveTab('product-enquiries')}
+              className={`px-6 py-3 font-medium whitespace-nowrap ${
+                activeTab === 'product-enquiries'
+                  ? 'border-b-2 border-blue-600 text-blue-600'
+                  : 'text-gray-600 hover:text-gray-800'
+              }`}
+            >
+              Product Enquiries
             </button>
           </div>
         </div>
@@ -1008,7 +1093,8 @@ const Admin: React.FC = () => {
         {activeTab === 'products' && <ProductsManager />}
         {activeTab === 'collections' && <CollectionsManager />}
         {activeTab === 'reviews' && <ReviewsManager />}
-        {activeTab === 'enquiries' && <EnquiriesManager />}
+        {activeTab === 'general-enquiries' && <GeneralEnquiriesManager />}
+        {activeTab === 'product-enquiries' && <ProductEnquiriesManager />}
       </div>
     </div>
   );

@@ -31,7 +31,16 @@ export interface Enquiry {
   name: string;
   email: string;
   message: string;
-  productId?: string;
+  createdAt: string;
+}
+
+export interface ProductEnquiry {
+  id?: string;
+  _id?: string; // MongoDB ID
+  name: string;
+  email: string;
+  message: string;
+  productId: string;
   createdAt: string;
 }
 

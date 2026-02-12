@@ -3,6 +3,15 @@ export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://amanat
 export const API_TIMEOUT = Number(import.meta.env.VITE_API_TIMEOUT) || 60000;
 export const IS_DEV = import.meta.env.MODE !== 'production';
 
+// WhatsApp Business API Configuration
+export const WHATSAPP_CONFIG = {
+  phoneNumberId: import.meta.env.VITE_WHATSAPP_PHONE_NUMBER_ID || 'DEMO_PHONE_NUMBER_ID',
+  accessToken: import.meta.env.VITE_WHATSAPP_ACCESS_TOKEN || 'DEMO_ACCESS_TOKEN',
+  businessNumber: import.meta.env.VITE_WHATSAPP_BUSINESS_NUMBER || '+918886020800',
+  apiVersion: 'v18.0',
+  apiBaseUrl: 'https://graph.facebook.com'
+};
+
 // Hardcoded Homepage Content (not provided by backend)
 export const HOMEPAGE_CONTENT = {
   heroTitle: 'Amanat',
