@@ -20,6 +20,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroImage, heroTitle, 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
+  const handleScrollDown = () => {
+    const nextSection = document.querySelector('[data-home-next-section]');
+
+    if (nextSection instanceof HTMLElement) {
+      nextSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+
+    window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
+  };
+
   useEffect(() => {
     const interval = setInterval(() => {
       setIsTransitioning(true);
@@ -123,6 +134,27 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroImage, heroTitle, 
           </div>
         </div>
       </div>
+
+      <button
+        type="button"
+        onClick={handleScrollDown}
+        aria-label="Scroll down"
+        className="md:hidden absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center text-stone-200/90 hover:text-white transition-colors"
+      >
+        <span className="text-[9px] uppercase tracking-[0.35em]">Scroll</span>
+        <span className="mt-2 h-8 w-8 rounded-full border border-stone-300/60 flex items-center justify-center animate-bounce">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.75"
+            className="h-4 w-4"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </span>
+      </button>
     </section>
   );
 };

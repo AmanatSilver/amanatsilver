@@ -62,7 +62,9 @@ const Home: React.FC = () => {
         heroSubtitle={data.heroSubtitle}
       />
       
-      <CollectionGrid collections={collections} />
+      <div data-home-next-section>
+        <CollectionGrid collections={collections} />
+      </div>
       
       <NewArrivals products={newArrivals} />
       
