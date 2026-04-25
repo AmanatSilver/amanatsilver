@@ -32,7 +32,7 @@ const Broches: React.FC = () => {
     <div className="pt-40 pb-32 bg-stone-50 min-h-screen" data-scroll-section>
       <div className="container mx-auto px-6">
         <header className="mb-24 text-center max-w-2xl mx-auto" data-scroll data-scroll-speed="0.5">
-          <h1 className="text-6xl font-light mb-8 serif gsap-fade-up">Men's Broches</h1>
+          <h1 className="text-6xl font-light mb-8 serif gsap-fade-up">Men's Brooches</h1>
           <p className="text-stone-500 font-light leading-relaxed mb-12 gsap-fade-up">
             Sophisticated silver brooches crafted for the modern gentleman. Each piece combines traditional craftsmanship with contemporary design.
           </p>
@@ -42,7 +42,7 @@ const Broches: React.FC = () => {
           <ProductGridSkeleton count={6} />
         ) : products.length === 0 ? (
           <EmptyState 
-            title="No Broches Available"
+            title="No Brooches Available"
             message="We're currently crafting new pieces. Check back soon!"
             actionLabel="View Jewelry Collection"
             onAction={() => window.location.href = '#/collections'}
