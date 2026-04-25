@@ -6,7 +6,7 @@ import { Product } from '../../../types';
 
 const navLinks = [
   { name: 'Pure Silver', path: '/collections' },
-  { name: 'Broches', path: '/broches' },
+  { name: 'Brooches', path: '/broches' },
   { name: 'About', path: '/about' },
   { name: 'Contact', path: '/contact' },
 ];
