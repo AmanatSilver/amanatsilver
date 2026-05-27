@@ -16,7 +16,7 @@ export const CollectionGrid: React.FC<CollectionGridProps> = ({ collections }) =
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 md:gap-12">
         {collections.map((collection, index) => (
           <Link key={collection.id} to="/collections" className="group block">
-            <h3 className="text-2xl md:text-3xl lg:text-4xl font-light tracking-[0.1em] md:tracking-[0.2em] serif mb-6 md:mb-8 text-stone-900 group-hover:transition-colors group-hover:duration-500" style={{ color: 'inherit' }} onMouseEnter={(e) => e.currentTarget.style.color = '#c9b27d'} onMouseLeave={(e) => e.currentTarget.style.color = '#292524'}>{collection.name}</h3>
+            <h3 className="text-xl md:text-2xl lg:text-3xl font-light tracking-[0.1em] md:tracking-[0.2em] serif mb-6 md:mb-8 text-stone-900 group-hover:transition-colors group-hover:duration-500" style={{ color: 'inherit', textTransform: 'capitalize' }} onMouseEnter={(e) => e.currentTarget.style.color = '#c9b27d'} onMouseLeave={(e) => e.currentTarget.style.color = '#292524'}>{collection.name}</h3>
             <div className="aspect-[3/4.5] overflow-hidden bg-stone-100 rounded-2xl">
               <img src={collection.heroImage} alt={collection.name} className="w-full h-full object-cover object-center" />
             </div>
