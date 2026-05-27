@@ -5,7 +5,7 @@ import { apiService } from '../../../services/api';
 import { Product } from '../../../types';
 
 const navLinks = [
-  { name: 'Pure Silver', path: '/collections' },
+  { name: 'Collections', path: '/collections' },
   { name: 'Brooches', path: '/broches' },
   { name: 'About', path: '/about' },
   { name: 'Contact', path: '/contact' },
