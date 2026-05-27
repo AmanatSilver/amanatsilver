@@ -139,7 +139,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroImage, heroTitle, 
         type="button"
         onClick={handleScrollDown}
         aria-label="Swipe up to scroll"
-        className="md:hidden absolute bottom-28 left-1/2 -translate-x-1/2 z-30"
+        className="absolute bottom-28 left-1/2 -translate-x-1/2 z-30"
       >
         <span className="flex items-center gap-1 rounded-full border border-white/35 bg-black/45 px-4 py-2 text-[10px] uppercase tracking-[0.25em] text-white shadow-xl backdrop-blur-sm transition-all hover:bg-black/60">
           <span className="leading-none">Scroll</span>
