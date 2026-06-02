@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { apiService } from '../services/api';
-import { Product, Collection, Review, Enquiry, HomepageContent } from '../types';
+import { Product, Collection, Review, Enquiry } from '../types';
 import { validateProductForm, validateCollectionForm } from '../utils/validation';
 
 // Helper to get MongoDB or frontend ID
@@ -18,23 +18,21 @@ const compressImage = async (file: File, maxSizeMB: number = 1): Promise<File> =
         const canvas = document.createElement('canvas');
         let width = img.width;
         let height = img.height;
-        
-        // Resize if too large (max 1200px width)
+
         const MAX_WIDTH = 1200;
         if (width > MAX_WIDTH) {
           height = (height * MAX_WIDTH) / width;
           width = MAX_WIDTH;
         }
-        
+
         canvas.width = width;
         canvas.height = height;
-        
+
         const ctx = canvas.getContext('2d');
         ctx?.drawImage(img, 0, 0, width, height);
-        
-        // Start with quality 0.8 and reduce if needed
+
         let quality = 0.8;
-        
+
         const tryCompress = () => {
           canvas.toBlob(
             (blob) => {
@@ -42,10 +40,9 @@ const compressImage = async (file: File, maxSizeMB: number = 1): Promise<File> =
                 reject(new Error('Compression failed'));
                 return;
               }
-              
+
               const sizeMB = blob.size / (1024 * 1024);
-              
-              // If still too large and quality can be reduced, try again
+
               if (sizeMB > maxSizeMB && quality > 0.3) {
                 quality -= 0.1;
                 tryCompress();
@@ -61,7 +58,7 @@ const compressImage = async (file: File, maxSizeMB: number = 1): Promise<File> =
             quality
           );
         };
-        
+
         tryCompress();
       };
       img.onerror = reject;
@@ -70,7 +67,8 @@ const compressImage = async (file: File, maxSizeMB: number = 1): Promise<File> =
   });
 };
 
-// Login Component
+// ─── Login ────────────────────────────────────────────────────────────────────
+
 const AdminLogin: React.FC<{ onLogin: () => void }> = ({ onLogin }) => {
   const [adminKey, setAdminKey] = useState('');
   const [error, setError] = useState('');
@@ -95,8 +93,7 @@ const AdminLogin: React.FC<{ onLogin: () => void }> = ({ onLogin }) => {
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
       <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
         <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">Admin Login</h1>
-        
-        {/* Info Display */}
+
         <div className="bg-blue-50 border border-blue-200 rounded-md p-3 mb-4">
           <p className="text-sm text-blue-800 font-semibold mb-1">Backend Authentication</p>
           <p className="text-xs text-blue-700">Enter your admin key to access the admin panel</p>
@@ -128,7 +125,8 @@ const AdminLogin: React.FC<{ onLogin: () => void }> = ({ onLogin }) => {
   );
 };
 
-// Products Manager
+// ─── Products Manager ─────────────────────────────────────────────────────────
+
 const ProductsManager: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [collections, setCollections] = useState<Collection[]>([]);
@@ -136,6 +134,7 @@ const ProductsManager: React.FC = () => {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [formData, setFormData] = useState<Partial<Product>>({});
   const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [compressing, setCompressing] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -159,14 +158,13 @@ const ProductsManager: React.FC = () => {
 
   const handleSave = async () => {
     try {
-      // Comprehensive validation
       const validation = validateProductForm({
         name: formData.name,
         description: formData.description,
         careInstructions: formData.careInstructions,
         price: formData.price,
         collectionId: formData.collectionId,
-        materials: formData.materials
+        materials: formData.materials,
       });
 
       if (!validation.valid) {
@@ -174,19 +172,23 @@ const ProductsManager: React.FC = () => {
         return;
       }
 
-      // For new products, check image files; for updates, either files or existing images
       if (!editingProduct && imageFiles.length === 0) {
         alert('Please upload at least one product image');
         return;
       }
 
-      // Compress images before uploading
+      if (imageFiles.length > 10) {
+        alert('Maximum 10 images allowed for products');
+        return;
+      }
+
+      // Compress images
       let compressedFiles: File[] = [];
       if (imageFiles.length > 0) {
-        alert('Compressing images, please wait...');
+        setCompressing(true);
         try {
           compressedFiles = await Promise.all(
-            imageFiles.map(file => compressImage(file, 0.3)) // Max 300KB per image
+            imageFiles.map(file => compressImage(file, 0.3))
           );
           const totalSizeMB = compressedFiles.reduce((sum, f) => sum + f.size, 0) / (1024 * 1024);
           console.log(`Compressed ${compressedFiles.length} images to ${totalSizeMB.toFixed(2)}MB total`);
@@ -194,36 +196,33 @@ const ProductsManager: React.FC = () => {
           console.error('Image compression failed:', compressionError);
           alert('Failed to compress images. Please try with smaller images.');
           return;
+        } finally {
+          setCompressing(false);
         }
       }
 
-      // Create FormData for file upload
       const formDataToSend = new FormData();
-      
-      // Add basic fields
-      formDataToSend.append('name', formData.name);
-      formDataToSend.append('collectionId', formData.collectionId);
-      formDataToSend.append('description', formData.description);
-      formDataToSend.append('price', formData.price.toString());
-      formDataToSend.append('careInstructions', formData.careInstructions);
+      formDataToSend.append('name', formData.name!);
+      formDataToSend.append('collectionId', formData.collectionId!);
+      formDataToSend.append('description', formData.description!);
+      formDataToSend.append('price', formData.price!.toString());
+      formDataToSend.append('careInstructions', formData.careInstructions!);
       formDataToSend.append('featured', (formData.featured || false).toString());
       formDataToSend.append('isNewArrival', (formData.isNewArrival || false).toString());
       formDataToSend.append('category', formData.category || 'jewelry');
-      
-      // Add arrays
+
       if (formData.materials && formData.materials.length > 0) {
         formData.materials.filter(m => m.trim() !== '').forEach(material => {
           formDataToSend.append('materials', material);
         });
       }
-      
+
       if (formData.tags && formData.tags.length > 0) {
         formData.tags.filter(t => t.trim() !== '').forEach(tag => {
           formDataToSend.append('tags', tag);
         });
       }
-      
-      // Add compressed image files
+
       compressedFiles.forEach((file) => {
         formDataToSend.append('images', file);
       });
@@ -233,7 +232,7 @@ const ProductsManager: React.FC = () => {
       } else {
         await apiService.createProduct(formDataToSend);
       }
-      
+
       setEditingProduct(null);
       setFormData({});
       setImageFiles([]);
@@ -301,7 +300,8 @@ const ProductsManager: React.FC = () => {
           </h3>
           <div className="bg-blue-50 border border-blue-200 rounded-md p-3 mb-4">
             <p className="text-sm text-blue-800">
-              <strong>Note:</strong> Fields marked with * are required. The slug is automatically generated by the backend from the product name.
+              <strong>Note:</strong> Fields marked with * are required. The slug is automatically
+              generated by the backend from the product name. Upload up to 10 images.
             </p>
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -338,7 +338,9 @@ const ProductsManager: React.FC = () => {
             />
             <select
               value={formData.category || 'jewelry'}
-              onChange={(e) => setFormData({ ...formData, category: e.target.value as 'jewelry' | 'broche' })}
+              onChange={(e) =>
+                setFormData({ ...formData, category: e.target.value as 'jewelry' | 'broche' })
+              }
               className="px-3 py-2 border rounded-md"
               required
             >
@@ -358,13 +360,18 @@ const ProductsManager: React.FC = () => {
               placeholder="Materials (comma separated)"
               value={formData.materials?.join(', ') || ''}
               onChange={(e) =>
-                setFormData({ ...formData, materials: e.target.value.split(',').map((s) => s.trim()) })
+                setFormData({
+                  ...formData,
+                  materials: e.target.value.split(',').map((s) => s.trim()),
+                })
               }
               className="px-3 py-2 border rounded-md col-span-2"
             />
+
+            {/* ── Image upload ── */}
             <div className="col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Product Images * (Upload multiple images - will be auto-compressed)
+                Product Images * (up to 10 — auto-compressed before upload)
               </label>
               <input
                 type="file"
@@ -372,30 +379,71 @@ const ProductsManager: React.FC = () => {
                 multiple
                 onChange={(e) => {
                   if (e.target.files) {
-                    setImageFiles(Array.from(e.target.files));
+                    const files = Array.from(e.target.files);
+                    if (files.length > 10) {
+                      alert('Maximum 10 images allowed. Please select up to 10 images.');
+                      e.target.value = '';
+                      return;
+                    }
+                    setImageFiles(files);
                   }
                 }}
                 className="px-3 py-2 border rounded-md w-full"
               />
+
+              {/* Selected files feedback */}
               {imageFiles.length > 0 && (
-                <div className="mt-2 text-sm text-gray-600">
-                  {imageFiles.length} file(s) selected: {imageFiles.map(f => f.name).join(', ')}
-                  <br />
-                  <span className="text-xs text-blue-600">Images will be automatically compressed before upload</span>
+                <div className="mt-2 space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium text-green-600">
+                      ✓ {imageFiles.length} / 10 image{imageFiles.length !== 1 ? 's' : ''} selected
+                    </span>
+                    {compressing && (
+                      <span className="text-xs text-blue-600 animate-pulse">Compressing…</span>
+                    )}
+                  </div>
+                  <div className="flex flex-wrap gap-1">
+                    {imageFiles.map((f, i) => (
+                      <span
+                        key={i}
+                        className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full"
+                      >
+                        {f.name}
+                      </span>
+                    ))}
+                  </div>
+                  <p className="text-xs text-blue-600">
+                    Images will be automatically compressed before upload
+                  </p>
                 </div>
               )}
-              {editingProduct && formData.images && formData.images.length > 0 && imageFiles.length === 0 && (
-                <div className="mt-2 text-sm text-gray-600">
-                  Current images: {formData.images.length} image(s)
-                </div>
-              )}
+
+              {/* Existing images (edit mode, no new files chosen yet) */}
+              {editingProduct &&
+                formData.images &&
+                formData.images.length > 0 &&
+                imageFiles.length === 0 && (
+                  <div className="mt-2 text-sm text-gray-600">
+                    <div className="font-medium">
+                      Current images: {formData.images.length} image
+                      {formData.images.length !== 1 ? 's' : ''}
+                    </div>
+                    <span className="text-xs text-orange-600">
+                      Upload new images to replace the current ones
+                    </span>
+                  </div>
+                )}
             </div>
+
             <input
               type="text"
               placeholder="Tags (comma separated)"
               value={formData.tags?.join(', ') || ''}
               onChange={(e) =>
-                setFormData({ ...formData, tags: e.target.value.split(',').map((s) => s.trim()) })
+                setFormData({
+                  ...formData,
+                  tags: e.target.value.split(',').map((s) => s.trim()),
+                })
               }
               className="px-3 py-2 border rounded-md col-span-2"
             />
@@ -429,9 +477,10 @@ const ProductsManager: React.FC = () => {
           <div className="flex gap-2 mt-4">
             <button
               onClick={handleSave}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+              disabled={compressing}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md disabled:opacity-50"
             >
-              Save
+              {compressing ? 'Compressing images…' : 'Save'}
             </button>
             <button
               onClick={() => {
@@ -451,11 +500,24 @@ const ProductsManager: React.FC = () => {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Price</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Collection</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Featured</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Name
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Price
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Collection
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Images
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Featured
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -467,8 +529,12 @@ const ProductsManager: React.FC = () => {
                   {collections.find((c) => getId(c) === product.collectionId)?.name || 'N/A'}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  {product.featured ? '✓' : ''}
+                  <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full">
+                    {product.images?.length ?? 0} image
+                    {(product.images?.length ?? 0) !== 1 ? 's' : ''}
+                  </span>
                 </td>
+                <td className="px-6 py-4 whitespace-nowrap">{product.featured ? '✓' : ''}</td>
                 <td className="px-6 py-4 whitespace-nowrap space-x-2">
                   <button
                     onClick={() => startEdit(product)}
@@ -492,12 +558,15 @@ const ProductsManager: React.FC = () => {
   );
 };
 
-// Collections Manager
+// ─── Collections Manager ──────────────────────────────────────────────────────
+
 const CollectionsManager: React.FC = () => {
   const [collections, setCollections] = useState<Collection[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingCollection, setEditingCollection] = useState<Collection | null>(null);
   const [formData, setFormData] = useState<Partial<Collection>>({});
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [compressing, setCompressing] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -517,11 +586,9 @@ const CollectionsManager: React.FC = () => {
 
   const handleSave = async () => {
     try {
-      // Comprehensive validation
       const validation = validateCollectionForm({
         name: formData.name,
         description: formData.description,
-        heroImage: formData.heroImage
       });
 
       if (!validation.valid) {
@@ -529,21 +596,46 @@ const CollectionsManager: React.FC = () => {
         return;
       }
 
-      // Clean data before sending
-      const dataToSave = { ...formData };
-      
-      // Remove slug - backend auto-generates it from name
-      delete dataToSave.slug;
-      
-      console.log('Data being sent to backend:', JSON.stringify(dataToSave, null, 2));
+      // New collection requires an image file
+      if (!editingCollection && !imageFile) {
+        alert('Please upload a collection image');
+        return;
+      }
+
+      // Compress the chosen image
+      let compressedFile: File | null = null;
+      if (imageFile) {
+        setCompressing(true);
+        try {
+          compressedFile = await compressImage(imageFile, 0.5);
+          const sizeMB = compressedFile.size / (1024 * 1024);
+          console.log(`Compressed collection image to ${sizeMB.toFixed(2)}MB`);
+        } catch (compressionError) {
+          console.error('Image compression failed:', compressionError);
+          alert('Failed to compress image. Please try with a smaller image.');
+          return;
+        } finally {
+          setCompressing(false);
+        }
+      }
+
+      // Always send FormData so the backend can handle the multipart upload
+      const formDataToSend = new FormData();
+      formDataToSend.append('name', formData.name || '');
+      formDataToSend.append('description', formData.description || '');
+      if (compressedFile) {
+        formDataToSend.append('images', compressedFile);
+      }
 
       if (editingCollection) {
-        await apiService.updateCollection(getId(editingCollection), dataToSave);
+        await apiService.updateCollection(getId(editingCollection), formDataToSend);
       } else {
-        await apiService.createCollection(dataToSave as Omit<Collection, 'id' | '_id' | 'slug'>);
+        await apiService.createCollection(formDataToSend);
       }
+
       setEditingCollection(null);
       setFormData({});
+      setImageFile(null);
       fetchData();
     } catch (error) {
       console.error('Failed to save collection:', error);
@@ -566,15 +658,13 @@ const CollectionsManager: React.FC = () => {
   const startEdit = (collection: Collection) => {
     setEditingCollection(collection);
     setFormData(collection);
+    setImageFile(null);
   };
 
   const startNew = () => {
     setEditingCollection(null);
-    setFormData({
-      name: '',
-      description: '',
-      heroImage: '',
-    });
+    setFormData({ name: '', description: '', heroImage: '' });
+    setImageFile(null);
   };
 
   if (loading) return <div className="p-4">Loading collections...</div>;
@@ -598,7 +688,8 @@ const CollectionsManager: React.FC = () => {
           </h3>
           <div className="bg-blue-50 border border-blue-200 rounded-md p-3 mb-4">
             <p className="text-sm text-blue-800">
-              <strong>Note:</strong> Fields marked with * are required. The slug is automatically generated by the backend from the collection name.
+              <strong>Note:</strong> Fields marked with * are required. The slug is automatically
+              generated by the backend from the collection name. Exactly 1 image is required.
             </p>
           </div>
           <div className="space-y-4">
@@ -618,26 +709,72 @@ const CollectionsManager: React.FC = () => {
               rows={3}
               required
             />
-            <input
-              type="text"
-              placeholder="Hero Image URL *"
-              value={formData.heroImage || ''}
-              onChange={(e) => setFormData({ ...formData, heroImage: e.target.value })}
-              className="w-full px-3 py-2 border rounded-md"
-              required
-            />
+
+            {/* ── Image upload ── */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Collection Image * (exactly 1 image — auto-compressed before upload)
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  if (e.target.files && e.target.files.length > 0) {
+                    if (e.target.files.length > 1) {
+                      alert('Please select only 1 image for the collection');
+                      e.target.value = '';
+                      return;
+                    }
+                    setImageFile(e.target.files[0]);
+                  }
+                }}
+                className="px-3 py-2 border rounded-md w-full"
+              />
+
+              {/* Selected file feedback */}
+              {imageFile && (
+                <div className="mt-2 space-y-0.5">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium text-green-600">
+                      ✓ 1 / 1 image selected
+                    </span>
+                    {compressing && (
+                      <span className="text-xs text-blue-600 animate-pulse">Compressing…</span>
+                    )}
+                  </div>
+                  <p className="text-xs text-gray-600">{imageFile.name}</p>
+                  <p className="text-xs text-blue-600">
+                    Image will be automatically compressed before upload
+                  </p>
+                </div>
+              )}
+
+              {/* Existing image (edit mode, no new file chosen yet) */}
+              {editingCollection && !imageFile && formData.heroImage && (
+                <div className="mt-2 text-sm text-gray-600">
+                  <div className="font-medium">Current image: 1 / 1</div>
+                  <p className="text-xs text-gray-500 truncate">{formData.heroImage}</p>
+                  <span className="text-xs text-orange-600">
+                    Upload a new image to replace the current one
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
+
           <div className="flex gap-2 mt-4">
             <button
               onClick={handleSave}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+              disabled={compressing}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md disabled:opacity-50"
             >
-              Save
+              {compressing ? 'Compressing image…' : 'Save'}
             </button>
             <button
               onClick={() => {
                 setEditingCollection(null);
                 setFormData({});
+                setImageFile(null);
               }}
               className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-md"
             >
@@ -649,10 +786,16 @@ const CollectionsManager: React.FC = () => {
 
       <div className="grid gap-4">
         {collections.map((collection) => (
-          <div key={getId(collection)} className="bg-white p-4 rounded-lg shadow-md flex justify-between items-center">
+          <div
+            key={getId(collection)}
+            className="bg-white p-4 rounded-lg shadow-md flex justify-between items-center"
+          >
             <div>
               <h3 className="text-lg font-semibold">{collection.name}</h3>
               <p className="text-gray-600 text-sm">{collection.slug}</p>
+              <p className="text-xs text-gray-400">
+                {collection.heroImage ? '1 image' : 'No image'}
+              </p>
             </div>
             <div className="space-x-2">
               <button
@@ -675,7 +818,8 @@ const CollectionsManager: React.FC = () => {
   );
 };
 
-// Reviews Manager
+// ─── Reviews Manager ──────────────────────────────────────────────────────────
+
 const ReviewsManager: React.FC = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
@@ -705,12 +849,11 @@ const ReviewsManager: React.FC = () => {
 
   const handleSave = async () => {
     try {
-      // Remove empty product field before saving
       const dataToSave = { ...formData };
       if (!dataToSave.product || dataToSave.product === '') {
         delete dataToSave.product;
       }
-      
+
       if (editingReview) {
         await apiService.updateReview(getId(editingReview), dataToSave);
       } else {
@@ -793,7 +936,9 @@ const ReviewsManager: React.FC = () => {
               min="1"
               max="5"
               value={formData.rating || 5}
-              onChange={(e) => setFormData({ ...formData, rating: parseInt(e.target.value) })}
+              onChange={(e) =>
+                setFormData({ ...formData, rating: parseInt(e.target.value) })
+              }
               className="w-full px-3 py-2 border rounded-md"
             />
             <textarea
@@ -868,7 +1013,8 @@ const ReviewsManager: React.FC = () => {
   );
 };
 
-// General Enquiries Manager
+// ─── General Enquiries Manager ────────────────────────────────────────────────
+
 const GeneralEnquiriesManager: React.FC = () => {
   const [enquiries, setEnquiries] = useState<Enquiry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -916,7 +1062,9 @@ const GeneralEnquiriesManager: React.FC = () => {
                 <div>
                   <h3 className="text-lg font-semibold">{enquiry.name}</h3>
                   <p className="text-gray-600 text-sm">{enquiry.email}</p>
-                  <p className="text-gray-500 text-xs">{new Date(enquiry.createdAt).toLocaleString()}</p>
+                  <p className="text-gray-500 text-xs">
+                    {new Date(enquiry.createdAt).toLocaleString()}
+                  </p>
                 </div>
                 <button
                   onClick={() => handleDelete(enquiry)}
@@ -934,7 +1082,8 @@ const GeneralEnquiriesManager: React.FC = () => {
   );
 };
 
-// Product Enquiries Manager
+// ─── Product Enquiries Manager ────────────────────────────────────────────────
+
 const ProductEnquiriesManager: React.FC = () => {
   const [productEnquiries, setProductEnquiries] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -982,7 +1131,9 @@ const ProductEnquiriesManager: React.FC = () => {
                 <div>
                   <h3 className="text-lg font-semibold">{enquiry.name}</h3>
                   <p className="text-gray-600 text-sm">{enquiry.email}</p>
-                  <p className="text-gray-500 text-xs">{new Date(enquiry.createdAt).toLocaleString()}</p>
+                  <p className="text-gray-500 text-xs">
+                    {new Date(enquiry.createdAt).toLocaleString()}
+                  </p>
                   {enquiry.productId && typeof enquiry.productId === 'object' && (
                     <p className="text-blue-600 text-sm mt-1">
                       Product: {enquiry.productId.name || 'Unknown'}
@@ -1005,11 +1156,13 @@ const ProductEnquiriesManager: React.FC = () => {
   );
 };
 
+// ─── Main Admin Component ─────────────────────────────────────────────────────
 
-// Main Admin Component
 const Admin: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(apiService.isAuthenticated());
-  const [activeTab, setActiveTab] = useState<'products' | 'collections' | 'reviews' | 'general-enquiries' | 'product-enquiries'>('products');
+  const [activeTab, setActiveTab] = useState<
+    'products' | 'collections' | 'reviews' | 'general-enquiries' | 'product-enquiries'
+  >('products');
 
   const handleLogout = () => {
     apiService.logout();
@@ -1037,56 +1190,27 @@ const Admin: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 py-6">
         <div className="bg-white rounded-lg shadow-md mb-6">
           <div className="flex border-b overflow-x-auto">
-            <button
-              onClick={() => setActiveTab('products')}
-              className={`px-6 py-3 font-medium whitespace-nowrap ${
-                activeTab === 'products'
-                  ? 'border-b-2 border-blue-600 text-blue-600'
-                  : 'text-gray-600 hover:text-gray-800'
-              }`}
-            >
-              Products
-            </button>
-            <button
-              onClick={() => setActiveTab('collections')}
-              className={`px-6 py-3 font-medium whitespace-nowrap ${
-                activeTab === 'collections'
-                  ? 'border-b-2 border-blue-600 text-blue-600'
-                  : 'text-gray-600 hover:text-gray-800'
-              }`}
-            >
-              Collections
-            </button>
-            <button
-              onClick={() => setActiveTab('reviews')}
-              className={`px-6 py-3 font-medium whitespace-nowrap ${
-                activeTab === 'reviews'
-                  ? 'border-b-2 border-blue-600 text-blue-600'
-                  : 'text-gray-600 hover:text-gray-800'
-              }`}
-            >
-              Reviews
-            </button>
-            <button
-              onClick={() => setActiveTab('general-enquiries')}
-              className={`px-6 py-3 font-medium whitespace-nowrap ${
-                activeTab === 'general-enquiries'
-                  ? 'border-b-2 border-blue-600 text-blue-600'
-                  : 'text-gray-600 hover:text-gray-800'
-              }`}
-            >
-              General Enquiries
-            </button>
-            <button
-              onClick={() => setActiveTab('product-enquiries')}
-              className={`px-6 py-3 font-medium whitespace-nowrap ${
-                activeTab === 'product-enquiries'
-                  ? 'border-b-2 border-blue-600 text-blue-600'
-                  : 'text-gray-600 hover:text-gray-800'
-              }`}
-            >
-              Product Enquiries
-            </button>
+            {(
+              [
+                { key: 'products', label: 'Products' },
+                { key: 'collections', label: 'Collections' },
+                { key: 'reviews', label: 'Reviews' },
+                { key: 'general-enquiries', label: 'General Enquiries' },
+                { key: 'product-enquiries', label: 'Product Enquiries' },
+              ] as const
+            ).map(({ key, label }) => (
+              <button
+                key={key}
+                onClick={() => setActiveTab(key)}
+                className={`px-6 py-3 font-medium whitespace-nowrap ${
+                  activeTab === key
+                    ? 'border-b-2 border-blue-600 text-blue-600'
+                    : 'text-gray-600 hover:text-gray-800'
+                }`}
+              >
+                {label}
+              </button>
+            ))}
           </div>
         </div>
 

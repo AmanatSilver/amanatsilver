@@ -66,14 +66,13 @@ export const validateProductForm = (data: {
 
   return {
     valid: errors.length === 0,
-    errors
+    errors,
   };
 };
 
 export const validateCollectionForm = (data: {
   name?: string;
   description?: string;
-  heroImage?: string;
 }): { valid: boolean; errors: string[] } => {
   const errors: string[] = [];
 
@@ -85,12 +84,12 @@ export const validateCollectionForm = (data: {
     errors.push('Description must be at least 10 characters');
   }
 
-  if (!data.heroImage || !validateUrl(data.heroImage)) {
-    errors.push('Please provide a valid hero image URL');
-  }
+  // heroImage URL is no longer validated here because the image is now
+  // uploaded as a file (multipart/form-data). The component checks that
+  // a file has been selected before calling the API.
 
   return {
     valid: errors.length === 0,
-    errors
+    errors,
   };
 };

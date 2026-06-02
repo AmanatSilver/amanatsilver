@@ -42,22 +42,20 @@ const MAX_RETRIES = 3;
 const RETRY_DELAY = 1000;
 
 const fetchWithRetry = async (
-  url: string, 
-  options: RequestInit = {}, 
+  url: string,
+  options: RequestInit = {},
   retries = MAX_RETRIES
 ): Promise<Response> => {
   try {
     const response = await fetch(url, options);
-    
-    // Retry on server errors (5xx) if retries remaining
+
     if (!response.ok && retries > 0 && response.status >= 500) {
       await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
       return fetchWithRetry(url, options, retries - 1);
     }
-    
+
     return response;
   } catch (error) {
-    // Retry on network errors if retries remaining
     if (retries > 0) {
       await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
       return fetchWithRetry(url, options, retries - 1);
@@ -77,10 +75,10 @@ const apiRequest = async <T>(
   options: RequestInit = {}
 ): Promise<T> => {
   const token = getAuthToken();
-  
-  // Don't set Content-Type for FormData - browser will set it with boundary
+
+  // Don't set Content-Type for FormData — browser sets it with the correct boundary
   const isFormData = options.body instanceof FormData;
-  const headers: HeadersInit = isFormData 
+  const headers: HeadersInit = isFormData
     ? { ...options.headers }
     : {
         'Content-Type': 'application/json',
@@ -88,7 +86,7 @@ const apiRequest = async <T>(
       };
 
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+    (headers as Record<string, string>)['Authorization'] = `Bearer ${token}`;
   }
 
   const controller = new AbortController();
@@ -103,19 +101,17 @@ const apiRequest = async <T>(
 
     clearTimeout(timeoutId);
 
-    // Check if response has content before parsing JSON
     const contentType = response.headers.get('content-type');
     const hasJsonContent = contentType && contentType.includes('application/json');
-    
-    // For successful responses with no content (like DELETE), return empty object
+
     if (response.ok && response.status === 204) {
       return {} as T;
     }
-    
-    // Try to parse JSON only if content-type indicates JSON or there's content
-    const data = hasJsonContent || response.headers.get('content-length') !== '0' 
-      ? await response.json() 
-      : {};
+
+    const data =
+      hasJsonContent || response.headers.get('content-length') !== '0'
+        ? await response.json()
+        : {};
 
     if (!response.ok) {
       throw new Error(data.message || `API Error: ${response.status}`);
@@ -138,7 +134,7 @@ export const apiService = {
       method: 'POST',
       body: JSON.stringify({ adminKey }),
     });
-    
+
     if (response.data?.token) {
       localStorage.setItem('adminToken', response.data.token);
       return { token: response.data.token };
@@ -156,22 +152,18 @@ export const apiService = {
 
   // ============ Homepage (Hardcoded - not from backend) ============
   async getHomepage(): Promise<HomepageContent> {
-    // Check if admin has overridden homepage content
     const override = localStorage.getItem('homepage_override');
     if (override) {
       try {
         return Promise.resolve(JSON.parse(override));
       } catch (e) {
-        // If parsing fails, return default
         return Promise.resolve(HOMEPAGE_CONTENT);
       }
     }
-    // Homepage content is hardcoded since backend doesn't provide it
     return Promise.resolve(HOMEPAGE_CONTENT);
   },
 
   async updateHomepage(data: Partial<HomepageContent>): Promise<HomepageContent> {
-    // Store in localStorage for admin preview
     const updated = { ...HOMEPAGE_CONTENT, ...data };
     localStorage.setItem('homepage_override', JSON.stringify(updated));
     return Promise.resolve(updated);
@@ -198,13 +190,18 @@ export const apiService = {
     }
   },
 
-  async createCollection(data: Omit<Collection, 'id' | '_id' | 'slug'>): Promise<Collection> {
-    console.log('API createCollection called with:', JSON.stringify(data, null, 2));
+  /**
+   * Create a collection.
+   * Accepts FormData (with optional `images` file field) so the backend
+   * can handle the Cloudinary upload on its end.
+   */
+  async createCollection(data: FormData): Promise<Collection> {
     const response = await apiRequest<ApiResponse<{ collection: Collection }>>('/realSilver/collections', {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: data,
+      // No Content-Type header — apiRequest detects FormData and omits it
     });
-    
+
     if (!response.data?.collection) {
       throw new Error('Failed to create collection');
     }
@@ -212,12 +209,20 @@ export const apiService = {
     return response.data.collection;
   },
 
-  async updateCollection(id: string, data: Partial<Collection>): Promise<Collection> {
+  /**
+   * Update a collection.
+   * Accepts FormData (with optional `images` file field) or a plain object.
+   * When a new hero image is uploaded the backend replaces the existing one.
+   */
+  async updateCollection(id: string, data: FormData | Partial<Collection>): Promise<Collection> {
+    const isFormData = data instanceof FormData;
+
     const response = await apiRequest<ApiResponse<{ collection: Collection }>>(`/realSilver/collections/${id}`, {
       method: 'PATCH',
-      body: JSON.stringify(data),
+      body: isFormData ? data : JSON.stringify(data),
+      headers: isFormData ? {} : { 'Content-Type': 'application/json' },
     });
-    
+
     if (!response.data?.collection) {
       throw new Error('Failed to update collection');
     }
@@ -240,11 +245,11 @@ export const apiService = {
 
     const response = await apiRequest<ApiResponse<{ products: Product[] }>>('/products');
     const products = response.data?.products || [];
-    
-    const result = collectionId 
+
+    const result = collectionId
       ? products.filter((p: Product) => p.collectionId === collectionId)
       : products;
-    
+
     setCachedData(cacheKey, result);
     return result;
   },
@@ -274,13 +279,13 @@ export const apiService = {
 
   async createProduct(data: FormData | Omit<Product, 'id' | '_id' | 'slug'>): Promise<Product> {
     const isFormData = data instanceof FormData;
-    
+
     const response = await apiRequest<ApiResponse<{ product: Product }>>('/realSilver/products', {
       method: 'POST',
       body: isFormData ? data : JSON.stringify(data),
       headers: isFormData ? {} : { 'Content-Type': 'application/json' },
     });
-    
+
     if (!response.data?.product) {
       throw new Error('Failed to create product');
     }
@@ -290,13 +295,13 @@ export const apiService = {
 
   async updateProduct(id: string, data: FormData | Partial<Product>): Promise<Product> {
     const isFormData = data instanceof FormData;
-    
+
     const response = await apiRequest<ApiResponse<{ product: Product }>>(`/realSilver/products/${id}`, {
       method: 'PATCH',
       body: isFormData ? data : JSON.stringify(data),
       headers: isFormData ? {} : { 'Content-Type': 'application/json' },
     });
-    
+
     if (!response.data?.product) {
       throw new Error('Failed to update product');
     }
@@ -322,7 +327,7 @@ export const apiService = {
       method: 'POST',
       body: JSON.stringify(data),
     });
-    
+
     if (!response.data?.review) {
       throw new Error('Failed to create review');
     }
@@ -334,7 +339,7 @@ export const apiService = {
       method: 'PATCH',
       body: JSON.stringify(data),
     });
-    
+
     if (!response.data?.review) {
       throw new Error('Failed to update review');
     }
@@ -358,7 +363,7 @@ export const apiService = {
       method: 'POST',
       body: JSON.stringify(enquiry),
     });
-    
+
     return { success: !!response.success };
   },
 
@@ -374,12 +379,17 @@ export const apiService = {
     return response.data?.productEnquiries || [];
   },
 
-  async submitProductEnquiry(enquiry: { name: string; email: string; message: string; productId: string }): Promise<{ success: boolean }> {
+  async submitProductEnquiry(enquiry: {
+    name: string;
+    email: string;
+    message: string;
+    productId: string;
+  }): Promise<{ success: boolean }> {
     const response = await apiRequest<ApiResponse<{ productEnquiry: any }>>('/product-enquiries', {
       method: 'POST',
       body: JSON.stringify(enquiry),
     });
-    
+
     return { success: !!response.success };
   },
 
