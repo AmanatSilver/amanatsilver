@@ -17,19 +17,6 @@ export const validatePrice = (price: number): boolean => {
   return price >= 0 && price <= 10000000 && !isNaN(price);
 };
 
-export const validateUrl = (url: string): boolean => {
-  try {
-    new URL(url);
-    return true;
-  } catch {
-    return url.startsWith('/'); // Allow relative URLs
-  }
-};
-
-export const sanitizeInput = (input: string): string => {
-  return input.trim().replace(/[<>]/g, '');
-};
-
 export const validateProductForm = (data: {
   name?: string;
   description?: string;

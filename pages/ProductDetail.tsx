@@ -12,7 +12,6 @@ const ProductDetail: React.FC = () => {
   const [collection, setCollection] = useState<Collection | null>(null);
   const [similarProducts, setSimilarProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isEnquireOpen, setIsEnquireOpen] = useState(false);
   const { addToCart } = useCart();
   const [showAddedMessage, setShowAddedMessage] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
