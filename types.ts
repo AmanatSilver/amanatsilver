@@ -11,7 +11,7 @@ export interface Product {
   images: string[];
   featured: boolean;
   tags: string[];
-  category?: 'jewelry' | 'broche';
+  category?: 'jewelry' | 'broche' | 'brooche';
   price: number;
   isNewArrival?: boolean;
 }

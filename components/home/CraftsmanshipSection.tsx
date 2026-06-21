@@ -16,8 +16,8 @@ export const CraftsmanshipSection: React.FC<CraftsmanshipSectionProps> = ({
     <section className="bg-stone-900 text-stone-100 py-20 md:py-32 overflow-hidden">
       <div className="container mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
         <div className="relative">
-          <div className="aspect-[4/5] bg-stone-800 overflow-hidden grayscale rounded-2xl">
-            <img src={craftsmanshipImage} alt="Craftsmanship" className="w-full h-full object-cover object-center opacity-50 transition-transform duration-[3s] hover:scale-110" />
+          <div className="aspect-[4/5] bg-stone-800 overflow-hidden grayscale rounded-2xl flex items-center justify-center">
+            <img src={craftsmanshipImage} alt="Craftsmanship" className="w-full h-full object-contain opacity-50 transition-transform duration-[3s] hover:scale-110" />
           </div>
           <div className="absolute -bottom-20 -right-20 w-3/4 aspect-square bg-stone-50 p-20 hidden lg:flex flex-col justify-center">
             <h4 className="text-stone-900 text-4xl serif italic mb-10">Crafted with Integrity</h4>

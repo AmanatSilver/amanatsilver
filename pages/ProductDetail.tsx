@@ -117,21 +117,21 @@ const ProductDetail: React.FC = () => {
                   <button
                     key={i}
                     onClick={() => setCurrentImageIndex(i)}
-                    className={`aspect-square bg-stone-200 overflow-hidden rounded-lg border-2 transition-all ${
+                    className={`aspect-square bg-stone-200 overflow-hidden rounded-lg border-2 transition-all flex items-center justify-center ${
                       currentImageIndex === i ? 'border-stone-400' : 'border-transparent hover:border-stone-300'
                     }`}
                   >
-                    <img src={img} alt={`${product.name} ${i + 1}`} className="w-full h-full object-cover" />
+                    <img src={img} alt={`${product.name} ${i + 1}`} className="w-full h-full object-contain" />
                   </button>
                 ))}
               </div>
 
               {/* Main Image */}
-              <div className="flex-1 aspect-[4/5] max-w-lg bg-stone-200 overflow-hidden rounded-2xl">
+              <div className="flex-1 aspect-[4/5] max-w-lg bg-stone-200 overflow-hidden rounded-2xl flex items-center justify-center">
                 <img 
                   src={product.images[currentImageIndex]} 
                   alt={product.name} 
-                  className="w-full h-full object-cover object-center transition-opacity duration-500" 
+                  className="w-full h-full object-contain transition-opacity duration-500" 
                 />
               </div>
             </div>
@@ -188,11 +188,11 @@ const ProductDetail: React.FC = () => {
                     to={`/product/${similarProduct.slug}`}
                     className="group block"
                   >
-                    <div className="relative aspect-[3/4] bg-stone-200 overflow-hidden mb-6 rounded-2xl">
+                    <div className="relative aspect-[3/4] bg-stone-200 overflow-hidden mb-6 rounded-2xl flex items-center justify-center">
                       <img 
                         src={similarProduct.images[0]} 
                         alt={similarProduct.name}
-                        className="w-full h-full object-cover object-center luxury-transition group-hover:scale-105"
+                        className="w-full h-full object-contain luxury-transition group-hover:scale-105"
                       />
                       <div className="absolute inset-0 bg-stone-900/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     </div>

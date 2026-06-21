@@ -48,11 +48,11 @@ const Cart: React.FC = () => {
                   <div className="grid grid-cols-12 gap-6 p-6">
                     {/* Product Image */}
                     <div className="col-span-12 sm:col-span-4">
-                      <div className="aspect-square bg-stone-100 rounded-lg overflow-hidden">
+                      <div className="aspect-square bg-stone-100 rounded-lg overflow-hidden flex items-center justify-center">
                         <img 
                           src={item.product.images[0]} 
                           alt={item.product.name} 
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-contain"
                         />
                       </div>
                     </div>

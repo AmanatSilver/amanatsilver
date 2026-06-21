@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { apiService } from '../services/api';
 import { Product } from '../types';
-import { Loader } from '../components/common/Loader';
+import { LoadingSpinner } from '../components/common/LoadingSpinner';
 
 const ShopByPrice: React.FC = () => {
   const { range } = useParams<{ range: string }>();
@@ -56,7 +56,7 @@ const ShopByPrice: React.FC = () => {
   };
 
   if (loading) {
-    return <Loader />;
+    return <LoadingSpinner fullScreen message="Loading products..." />;
   }
 
   return (
@@ -86,11 +86,11 @@ const ShopByPrice: React.FC = () => {
                 className="group"
               >
                 <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                  <div className="aspect-[4/5] overflow-hidden bg-gray-100">
+                  <div className="aspect-[4/5] overflow-hidden bg-gray-100 flex items-center justify-center">
                     <img
                       src={product.images[0]}
                       alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500"
                     />
                   </div>
                   <div className="p-6">

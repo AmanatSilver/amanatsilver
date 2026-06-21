@@ -27,7 +27,7 @@ export const Navbar: React.FC = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [showPriceDropdown, setShowPriceDropdown] = useState(false);
-  const searchRef = useRef<HTMLDivElement>(null);
+  const searchRef = useRef<HTMLFormElement>(null);
   const priceDropdownRef = useRef<HTMLDivElement>(null);
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -170,11 +170,11 @@ export const Navbar: React.FC = () => {
                           className="flex items-center gap-4 px-5 py-4 hover:bg-gradient-to-r hover:from-[#c9b27d]/5 hover:to-transparent transition-all duration-300 border-b border-stone-100/50 last:border-b-0 group"
                           style={{ animationDelay: `${idx * 50}ms` }}
                         >
-                          <div className="w-14 h-14 rounded-xl overflow-hidden bg-stone-100 flex-shrink-0 shadow-sm group-hover:shadow-md transition-shadow">
+                          <div className="w-14 h-14 rounded-xl overflow-hidden bg-stone-100 flex-shrink-0 shadow-sm group-hover:shadow-md transition-shadow flex items-center justify-center">
                             <img 
                               src={product.images[0]} 
                               alt={product.name}
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                              className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
                             />
                           </div>
                           <div className="flex-1 min-w-0">

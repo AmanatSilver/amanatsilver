@@ -123,11 +123,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             >
               <div className="relative group cursor-pointer">
                 {/* Main Image */}
-                <div className="w-72 h-96 rounded-2xl overflow-hidden shadow-2xl transform group-hover:scale-105 transition-transform duration-700">
+                <div className="w-72 h-96 rounded-2xl overflow-hidden shadow-2xl transform group-hover:scale-105 transition-transform duration-700 flex items-center justify-center bg-stone-900">
                   <img
                     src={heroImages[currentImageIndex]}
                     alt="Featured Jewelry"
-                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                    className="w-full h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 </div>
@@ -142,18 +142,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </div>
 
             {/* Background Floating Images */}
-            <div className="absolute -top-12 -left-12 w-40 h-52 rounded-xl overflow-hidden shadow-xl opacity-40 rotate-12 hover:opacity-60 transition-all duration-500 hover:rotate-6">
+            <div className="absolute -top-12 -left-12 w-40 h-52 rounded-xl overflow-hidden shadow-xl opacity-40 rotate-12 hover:opacity-60 transition-all duration-500 hover:rotate-6 flex items-center justify-center bg-stone-900">
               <img
                 src={heroImages[(currentImageIndex + 1) % heroImages.length]}
                 alt=""
-                className="w-full h-full object-cover grayscale"
+                className="w-full h-full object-contain grayscale"
               />
             </div>
-            <div className="absolute -bottom-16 -right-16 w-36 h-48 rounded-xl overflow-hidden shadow-xl opacity-40 -rotate-12 hover:opacity-60 transition-all duration-500 hover:-rotate-6">
+            <div className="absolute -bottom-16 -right-16 w-36 h-48 rounded-xl overflow-hidden shadow-xl opacity-40 -rotate-12 hover:opacity-60 transition-all duration-500 hover:-rotate-6 flex items-center justify-center bg-stone-900">
               <img
                 src={heroImages[(currentImageIndex + 2) % heroImages.length]}
                 alt=""
-                className="w-full h-full object-cover grayscale"
+                className="w-full h-full object-contain grayscale"
               />
             </div>
           </div>

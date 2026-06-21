@@ -252,11 +252,11 @@ const Checkout: React.FC = () => {
                 <div className="space-y-6 mb-8 pb-8 border-b border-stone-100">
                   {cart.map((item) => (
                     <div key={item.product.id} className="flex gap-4">
-                      <div className="w-20 h-20 bg-stone-100 rounded-lg overflow-hidden flex-shrink-0">
+                      <div className="w-20 h-20 bg-stone-100 rounded-lg overflow-hidden flex-shrink-0 flex items-center justify-center">
                         <img 
                           src={item.product.images[0]} 
                           alt={item.product.name} 
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-contain"
                         />
                       </div>
                       <div className="flex-1 min-w-0">

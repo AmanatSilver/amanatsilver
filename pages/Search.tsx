@@ -58,11 +58,11 @@ const Search: React.FC = () => {
               className="group block gsap-fade-up"
               style={{ animationDelay: `${idx * 0.1}s` }}
             >
-              <div className="relative aspect-[3/4] bg-stone-200 overflow-hidden mb-8 rounded-2xl">
+              <div className="relative aspect-[3/4] bg-stone-200 overflow-hidden mb-8 rounded-2xl flex items-center justify-center">
                 <img 
                   src={product.images[0]} 
                   alt={product.name}
-                  className="w-full h-full object-cover object-center luxury-transition group-hover:scale-105"
+                  className="w-full h-full object-contain luxury-transition group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-stone-900/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               </div>

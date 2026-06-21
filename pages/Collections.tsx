@@ -87,12 +87,12 @@ const Collections: React.FC = () => {
               className="group block gsap-fade-up"
               style={{ animationDelay: `${idx * 0.1}s` }}
             >
-              <div className="relative aspect-[3/4] bg-stone-200 overflow-hidden mb-8 rounded-2xl">
+              <div className="relative aspect-[3/4] bg-stone-200 overflow-hidden mb-8 rounded-2xl flex items-center justify-center">
                 {product.images && product.images.length > 0 ? (
                   <img 
                     src={product.images[0]} 
                     alt={product.name}
-                    className="w-full h-full object-cover object-center luxury-transition group-hover:scale-105"
+                    className="w-full h-full object-contain luxury-transition group-hover:scale-105"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-stone-400 text-sm">

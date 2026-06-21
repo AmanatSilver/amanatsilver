@@ -37,8 +37,8 @@ export const ReviewSection: React.FC<ReviewSectionProps> = ({ reviews, monthlyIm
           {/* Left Side - Background Image with Review Overlay */}
           <div className="relative order-2 lg:order-1 flex items-center">
             {/* Main Static Image - Smaller and proportional */}
-            <div className="aspect-[3/4] max-w-sm bg-stone-800 overflow-hidden grayscale rounded-2xl mb-8 lg:mb-0">
-              <img src="/artifact-25.webp" alt="Craftsmanship" className="w-full h-full object-cover object-center opacity-50" />
+            <div className="aspect-[3/4] max-w-sm bg-stone-800 overflow-hidden grayscale rounded-2xl mb-8 lg:mb-0 flex items-center justify-center">
+              <img src="/artifact-25.webp" alt="Craftsmanship" className="w-full h-full object-contain opacity-50" />
             </div>
             
             {/* Review Card Overlay - Desktop Only */}

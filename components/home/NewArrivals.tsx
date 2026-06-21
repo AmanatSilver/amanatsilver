@@ -56,11 +56,11 @@ export const NewArrivals: React.FC<NewArrivalsProps> = ({ products }) => {
             to={`/product/${currentProduct.slug}`}
             className="group relative overflow-hidden rounded-2xl bg-white shadow-xl will-change-transform"
           >
-            <div className="aspect-[4/5] overflow-hidden">
+            <div className="aspect-[4/5] overflow-hidden flex items-center justify-center bg-white">
               <img 
                 src={currentProduct.images[0]} 
                 alt={currentProduct.name}
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700"
                 loading="eager"
               />
             </div>

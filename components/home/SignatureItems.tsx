@@ -36,11 +36,11 @@ export const SignatureItems: React.FC<SignatureItemsProps> = ({ featured }) => {
                 to={`/product/${product.slug}`} 
                 className={`group relative ${idx % 2 === 1 ? 'lg:col-start-2' : ''}`}
               >
-                <div className="aspect-[4/5] overflow-hidden bg-stone-800 rounded-2xl">
+                <div className="aspect-[4/5] overflow-hidden bg-stone-800 rounded-2xl flex items-center justify-center">
                   <img 
                     src={product.images[0]} 
                     alt={product.name} 
-                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-[2s] ease-out"
+                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-[2s] ease-out"
                   />
                 </div>
                 <div className="absolute top-6 right-6 backdrop-blur-sm px-4 py-2 rounded-full" style={{ backgroundColor: 'rgba(201, 178, 125, 0.9)' }}>

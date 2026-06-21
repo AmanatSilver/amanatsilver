@@ -339,13 +339,13 @@ const ProductsManager: React.FC = () => {
             <select
               value={formData.category || 'jewelry'}
               onChange={(e) =>
-                setFormData({ ...formData, category: e.target.value as 'jewelry' | 'broche' })
+                setFormData({ ...formData, category: e.target.value as 'jewelry' | 'brooche' })
               }
               className="px-3 py-2 border rounded-md"
               required
             >
               <option value="jewelry">Jewelry</option>
-              <option value="broche">Broche</option>
+              <option value="brooche">Brooche</option>
             </select>
             <textarea
               placeholder="Description *"
