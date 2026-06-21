@@ -7,8 +7,8 @@ interface SignatureItemsProps {
 }
 
 export const SignatureItems: React.FC<SignatureItemsProps> = ({ featured }) => {
-  // Show only first 2 featured items for editorial layout
-  const showcaseItems = featured.slice(0, 2);
+  // Show first 4 featured items for editorial layout
+  const showcaseItems = featured.slice(0, 4);
   
   return (
     <section className="py-20 md:py-32 bg-stone-900 text-stone-100">
