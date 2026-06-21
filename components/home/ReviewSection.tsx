@@ -30,7 +30,7 @@ export const ReviewSection: React.FC<ReviewSectionProps> = ({ reviews, monthlyIm
   }
 
   return (
-    <section className="bg-stone-900 text-stone-100 py-20 md:py-32 overflow-hidden" data-scroll-section>
+    <section className="bg-stone-900 text-stone-100 py-20 md:py-32 overflow-hidden">
       <div className="container mx-auto px-6 md:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 md:gap-20 lg:gap-24 items-start">
         

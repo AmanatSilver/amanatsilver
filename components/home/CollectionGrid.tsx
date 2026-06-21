@@ -8,7 +8,7 @@ interface CollectionGridProps {
 
 export const CollectionGrid: React.FC<CollectionGridProps> = ({ collections }) => {
   return (
-    <section className="py-20 md:py-32 container mx-auto px-6 md:px-12" data-scroll-section>
+    <section className="py-20 md:py-32 container mx-auto px-6 md:px-12">
       <div className="text-center mb-12 md:mb-16">
         <h2 className="text-[9px] sm:text-[10px] uppercase tracking-[0.6em] text-stone-400 mb-4">Our Collections</h2>
         <p className="text-3xl md:text-4xl lg:text-5xl font-light serif italic text-stone-800">Distinct Stories</p>

@@ -6,7 +6,7 @@ interface PhilosophySectionProps {
 
 export const PhilosophySection: React.FC<PhilosophySectionProps> = ({ brandStoryShort }) => {
   return (
-    <section className="py-20 md:py-32 bg-white relative overflow-hidden" data-scroll-section>
+    <section className="py-20 md:py-32 bg-white relative overflow-hidden">
       <div className="container mx-auto px-6 md:px-12">
         {/* Main Quote Section */}
         <div className="max-w-4xl mx-auto text-center">

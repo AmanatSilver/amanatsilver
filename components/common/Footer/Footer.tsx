@@ -14,7 +14,7 @@ const socialLinks = [
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="bg-[#0a0a0a] text-stone-100 py-20 md:py-32 lg:py-40" data-scroll-section>
+    <footer className="bg-[#0a0a0a] text-stone-100 py-20 md:py-32 lg:py-40">
       <div className="container mx-auto px-6 md:px-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12 md:gap-16 lg:gap-24 border-b border-stone-800 pb-16 md:pb-24 lg:pb-32">
           <div className="sm:col-span-2">

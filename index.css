@@ -4,6 +4,10 @@
   --accent-ice: #b7d6e8;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: 'Montserrat', sans-serif;
   background-color: #f8f8f8;
@@ -43,31 +47,6 @@ h1, h2, h3, h4, .serif {
 .line-reveal:hover::after {
   transform: scaleX(1);
   transform-origin: left;
-}
-
-/* Locomotive Scroll Overrides */
-html.has-scroll-smooth {
-  overflow: hidden;
-}
-
-html.has-scroll-dragging {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-.has-scroll-smooth body {
-  overflow: hidden;
-}
-
-.has-scroll-smooth [data-scroll-container] {
-  min-height: 100vh;
-}
-
-.c-scrollbar {
-  opacity: 0 !important;
-  pointer-events: none;
 }
 
 /* Fade transition animations */

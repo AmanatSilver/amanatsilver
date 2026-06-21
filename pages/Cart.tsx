@@ -12,7 +12,7 @@ const Cart: React.FC = () => {
 
   if (cart.length === 0) {
     return (
-      <div className="bg-stone-50 min-h-screen pt-32 pb-48" data-scroll-section>
+      <div className="bg-stone-50 min-h-screen pt-32 pb-48">
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto text-center py-20">
             <h1 className="text-5xl md:text-7xl font-light mb-8 serif tracking-tight">Your Cart</h1>
@@ -30,7 +30,7 @@ const Cart: React.FC = () => {
   }
 
   return (
-    <div className="bg-stone-50 min-h-screen pt-32 pb-48" data-scroll-section>
+    <div className="bg-stone-50 min-h-screen pt-32 pb-48">
       <div className="container mx-auto px-6">
         <div className="max-w-6xl mx-auto">
           <h1 className="text-5xl md:text-7xl font-light mb-16 serif tracking-tight">Your Cart</h1>

@@ -95,13 +95,10 @@ const Contact: React.FC = () => {
   };
 
   return (
-    <div
-      className="bg-stone-50 pt-48 pb-32 min-h-screen relative z-10"
-      data-scroll-section
-    >
+    <div className="bg-stone-50 pt-48 pb-32 min-h-screen relative z-10">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-24">
-          <div data-scroll data-scroll-speed="0.5">
+          <div>
             <h1 className="text-6xl font-light mb-12 serif tracking-tight gsap-fade-up">
               Initiate a Conversation
             </h1>
@@ -125,11 +122,7 @@ const Contact: React.FC = () => {
             </div>
           </div>
 
-          <div
-            className="bg-white p-12 shadow-sm"
-            data-scroll
-            data-scroll-speed="0.3"
-          >
+          <div className="bg-white p-12 shadow-sm">
             {status === "success" ? (
               <div className="h-full flex flex-col items-center justify-center text-center py-20">
                 <div className="w-16 h-[1px] bg-stone-900 mb-8"></div>

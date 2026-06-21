@@ -19,19 +19,15 @@ const Broches: React.FC = () => {
         console.error(err);
       } finally {
         setLoading(false);
-        setTimeout(() => {
-          const event = new CustomEvent('updateScroll');
-          window.dispatchEvent(event);
-        }, 200);
       }
     };
     fetchData();
   }, []);
 
   return (
-    <div className="pt-40 pb-32 bg-stone-50 min-h-screen" data-scroll-section>
+    <div className="pt-40 pb-32 bg-stone-50 min-h-screen">
       <div className="container mx-auto px-6">
-        <header className="mb-24 text-center max-w-2xl mx-auto" data-scroll data-scroll-speed="0.5">
+        <header className="mb-24 text-center max-w-2xl mx-auto">
           <h1 className="text-6xl font-light mb-8 serif gsap-fade-up">Men's Brooches</h1>
           <p className="text-stone-500 font-light leading-relaxed mb-12 gsap-fade-up">
             Sophisticated silver brooches crafted for the modern gentleman. Each piece combines traditional craftsmanship with contemporary design.
@@ -48,7 +44,7 @@ const Broches: React.FC = () => {
             onAction={() => window.location.href = '#/collections'}
           />
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-x-6 md:gap-x-12 gap-y-12 md:gap-y-20" data-scroll data-scroll-speed="0.3">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-x-6 md:gap-x-12 gap-y-12 md:gap-y-20">
             {products.map((product, idx) => (
             <Link 
               key={product.id} 

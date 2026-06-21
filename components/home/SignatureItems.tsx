@@ -11,7 +11,7 @@ export const SignatureItems: React.FC<SignatureItemsProps> = ({ featured }) => {
   const showcaseItems = featured.slice(0, 2);
   
   return (
-    <section className="py-20 md:py-32 bg-stone-900 text-stone-100" data-scroll-section>
+    <section className="py-20 md:py-32 bg-stone-900 text-stone-100">
       <div className="container mx-auto px-6 md:px-12">
         {/* Section Header */}
         <div className="text-center mb-16 md:mb-20 max-w-3xl mx-auto">

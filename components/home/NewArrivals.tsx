@@ -37,10 +37,10 @@ export const NewArrivals: React.FC<NewArrivalsProps> = ({ products }) => {
   if (!currentProduct) return null;
   
   return (
-    <section className="py-20 md:py-32 bg-gradient-to-b from-white to-[#f8f6f3]" data-scroll-section>
+    <section className="py-20 md:py-32 bg-gradient-to-b from-white to-[#f8f6f3]">
       <div className="max-w-7xl mx-auto px-6">
         {/* Section Header */}
-        <div className="text-center mb-16" data-scroll>
+        <div className="text-center mb-16">
           <p className="font-['Montserrat'] text-xs uppercase tracking-[0.3em] text-[#c9b27d] mb-4">
             Latest Additions
           </p>
@@ -50,7 +50,7 @@ export const NewArrivals: React.FC<NewArrivalsProps> = ({ products }) => {
         </div>
         
         {/* Product Showcase */}
-        <div key={currentProduct.id} className="grid md:grid-cols-2 gap-12 items-center" data-scroll>
+        <div key={currentProduct.id} className="grid md:grid-cols-2 gap-12 items-center">
           {/* Image */}
           <Link 
             to={`/product/${currentProduct.slug}`}

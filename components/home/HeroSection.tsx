@@ -38,20 +38,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const handleScrollDown = () => {
     const nextSection = document.querySelector("[data-home-next-section]");
 
-    // Use Locomotive's scrollTo directly via the scroll container
-    const scrollContainer = document.querySelector(
-      "[data-scroll-container]",
-    ) as any;
-
-    if (scrollContainer?.__locoScroll) {
-      // Access locomotive instance directly
-      scrollContainer.__locoScroll.scrollTo(nextSection || window.innerHeight);
-      return;
-    }
-
-    // Fallback
     if (nextSection instanceof HTMLElement) {
       nextSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      window.scrollTo({ top: window.innerHeight, behavior: "smooth" });
     }
   };
 
@@ -70,7 +60,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   return (
     <section
       className="relative h-screen w-full flex items-center justify-center bg-zinc-900 overflow-hidden"
-      data-scroll-section
     >
       {/* Animated Background Pattern */}
       <div className="absolute inset-0 opacity-10">

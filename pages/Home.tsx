@@ -40,11 +40,6 @@ const Home: React.FC = () => {
         console.error("Home data failed:", error);
       } finally {
         setLoading(false);
-        // Trigger scroll update after data loads
-        setTimeout(() => {
-          const event = new CustomEvent('updateScroll');
-          window.dispatchEvent(event);
-        }, 200);
       }
     };
     fetchData();

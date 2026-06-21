@@ -73,11 +73,6 @@ const ProductDetail: React.FC = () => {
         console.error(err);
       } finally {
         setLoading(false);
-        // Trigger scroll update after data loads
-        setTimeout(() => {
-          const event = new CustomEvent('updateScroll');
-          window.dispatchEvent(event);
-        }, 200);
       }
     };
     fetchData();
@@ -109,12 +104,12 @@ const ProductDetail: React.FC = () => {
   }
 
   return (
-    <div className="bg-stone-50 min-h-screen pt-32 pb-48" data-scroll-section>
+    <div className="bg-stone-50 min-h-screen pt-32 pb-48">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-20">
           
           {/* Image Gallery - Amazon Style */}
-          <div className="lg:col-span-7" data-scroll data-scroll-speed="0.5">
+          <div className="lg:col-span-7">
             <div className="flex gap-4">
               {/* Thumbnail Column */}
               <div className="flex flex-col gap-3 w-20">
@@ -143,7 +138,7 @@ const ProductDetail: React.FC = () => {
           </div>
 
           {/* Product Info */}
-          <div className="lg:col-span-5" data-scroll data-scroll-speed="0.3">
+          <div className="lg:col-span-5">
             <div className="sticky top-40">
               <nav className="mb-12 flex items-center space-x-4 text-[10px] uppercase tracking-[0.2em] text-stone-400">
                 <Link to="/collections" className="hover:text-stone-800">Catalogue</Link>

@@ -99,11 +99,7 @@ export const SilverRing3D: React.FC = () => {
           modelRef.current = object;
           scene.add(object);
           
-          // Trigger Locomotive Scroll update after model loads
-          setTimeout(() => {
-            const event = new CustomEvent('updateScroll');
-            window.dispatchEvent(event);
-          }, 100);
+
         },
         undefined,
         (error) => console.error('Error loading model:', error)
@@ -142,6 +138,6 @@ export const SilverRing3D: React.FC = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative w-80 h-80 md:w-[500px] md:h-[500px] pointer-events-none select-none" data-scroll data-scroll-speed="2"  />
+    <div ref={containerRef} className="relative w-80 h-80 md:w-[500px] md:h-[500px] pointer-events-none select-none" />
   );
 };
